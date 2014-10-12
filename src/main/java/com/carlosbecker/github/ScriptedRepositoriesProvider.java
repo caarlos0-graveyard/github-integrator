@@ -1,5 +1,6 @@
 package com.carlosbecker.github;
 
+import static com.google.common.collect.Lists.newArrayList;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,7 +27,7 @@ public class ScriptedRepositoriesProvider implements
     @Override
     public ScriptedRepositories get() {
         if (config.executions() == null)
-            return new ScriptedRepositories(null);
+            return new ScriptedRepositories(newArrayList());
         return parse();
     }
 
@@ -35,7 +36,7 @@ public class ScriptedRepositoriesProvider implements
             return new ScriptedRepositories(new Gson().fromJson(loadFile(),
                     TYPE));
         } catch (FileNotFoundException e) {
-            return null;
+            return new ScriptedRepositories(newArrayList());
         }
     }
 

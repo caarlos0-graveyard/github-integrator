@@ -1,4 +1,4 @@
-package com.carlosbecker.github;
+package com.carlosbecker.model;
 
 import lombok.Data;
 import lombok.experimental.Builder;

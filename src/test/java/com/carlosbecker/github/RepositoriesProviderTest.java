@@ -1,40 +1,32 @@
 package com.carlosbecker.github;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import java.util.List;
 import javax.inject.Inject;
+import org.eclipse.egit.github.core.RepositoryId;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import com.carlosbecker.ConfigModule;
+import com.carlosbecker.GithubModule;
 import com.carlosbecker.TestPropertiesLoader;
 import com.carlosbecker.guice.GuiceModules;
 import com.carlosbecker.guice.GuiceTestRunner;
 
-@GuiceModules(ConfigModule.class)
 @RunWith(GuiceTestRunner.class)
-public class GithubConfigProviderTest {
+@GuiceModules(GithubModule.class)
+public class RepositoriesProviderTest {
     @BeforeClass
     public static void before() throws Exception {
         TestPropertiesLoader.load();
     }
 
     @Inject
-    private GithubConfig config;
+    @Repositories
+    private List<RepositoryId> repositories;
 
     @Test
-    public void testConfigProvided() throws Exception {
-        assertThat(config, notNullValue());
-    }
-
-    @Test
-    public void testOauth() throws Exception {
-        assertThat(config.oauth(), notNullValue());
-    }
-
-    @Test
-    public void testRepos() throws Exception {
-        assertThat(config.repos().size(), equalTo(2));
+    public void testProvided() throws Exception {
+        assertThat(repositories, notNullValue());
     }
 }

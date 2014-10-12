@@ -3,6 +3,7 @@ package com.carlosbecker;
 import static java.lang.String.format;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 import javax.inject.Inject;
 import lombok.extern.log4j.Log4j;
 import org.eclipse.egit.github.core.Comment;
@@ -33,7 +34,9 @@ public class MainIntegrator {
 
     private void work(ScriptedRepository scriptedRepository) throws IOException {
         // TODO: it may process the same thing more than one time!!
-        for (PullRequest pr : prService.getPullRequests(scriptedRepository.getId(), "open"))
+        List<PullRequest> prlist = prService.getPullRequests(scriptedRepository.getId(), "open");
+        log.info(format("Repository %s has %d open PRs...", scriptedRepository.getId().toString(), prlist.size()));
+        for (PullRequest pr : prlist)
             for (Comment comment : issueService.getComments(scriptedRepository.getId(), pr.getNumber()))
                 if (scriptedRepository.should(comment.getBody()))
                     work(scriptedRepository, pr);

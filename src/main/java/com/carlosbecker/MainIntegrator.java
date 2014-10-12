@@ -17,14 +17,20 @@ import com.carlosbecker.process.ProcessExecutor;
 
 @Log4j
 public class MainIntegrator {
+    private final PullRequestService prService;
+    private final IssueService issueService;
+    private final ScriptedRepositories repositories;
+    private final ProcessExecutor executor;
+
     @Inject
-    private PullRequestService prService;
-    @Inject
-    private IssueService issueService;
-    @Inject
-    private ScriptedRepositories repositories;
-    @Inject
-    private ProcessExecutor executor;
+    public MainIntegrator(PullRequestService prService, IssueService issueService, ScriptedRepositories repositories,
+            ProcessExecutor executor) {
+        super();
+        this.prService = prService;
+        this.issueService = issueService;
+        this.repositories = repositories;
+        this.executor = executor;
+    }
 
     public void work() throws IOException {
         Iterator<ScriptedRepository> iterator = repositories.iterator();

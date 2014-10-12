@@ -1,12 +1,12 @@
 package com.carlosbecker;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static com.google.inject.Guice.createInjector;
 import java.io.File;
 import java.io.FileInputStream;
 import javax.inject.Inject;
 import lombok.extern.log4j.Log4j;
 import com.carlosbecker.github.IntegratorConfig;
-import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 @Log4j
@@ -28,7 +28,7 @@ public class App {
         log.info("Starting up...");
         if (!isNullOrEmpty(args[0]))
             System.getProperties().load(new FileInputStream(new File(args[0])));
-        Injector injector = Guice.createInjector(new MainModule());
+        Injector injector = createInjector(new ConfigModule(), new GithubModule());
         App app = injector.getInstance(App.class);
         app.run();
     }

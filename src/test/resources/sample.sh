@@ -1,3 +1,4 @@
 #!/bin/bash
-echo $@
-exit 0
+set -xe
+echo "Running..."
+echo $@ > ~/Desktop/runs

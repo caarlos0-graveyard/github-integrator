@@ -1,5 +1,6 @@
 package com.carlosbecker.model;
 
+import java.util.regex.Pattern;
 import lombok.Data;
 import lombok.experimental.Builder;
 import org.eclipse.egit.github.core.RepositoryId;
@@ -14,5 +15,9 @@ public class ScriptedRepository {
 
     public RepositoryId getId() {
         return new RepositoryId(owner, name);
+    }
+
+    public boolean should(String body) {
+        return Pattern.matches(regex, body);
     }
 }

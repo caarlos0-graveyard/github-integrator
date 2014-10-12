@@ -5,7 +5,7 @@
   "script": "./src/test/resources/sample.sh"
 }, {
   "owner": "caarlos0",
-  "name": "guice-junit -test-runner",
+  "name": "guice-junit-test-runner",
   "regex": "run this please",
   "script": "./src/test/resources/sample.sh"
 }]

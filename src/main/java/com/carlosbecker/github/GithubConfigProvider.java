@@ -7,6 +7,6 @@ import com.google.inject.Provider;
 public class GithubConfigProvider implements Provider<GithubConfig> {
 	@Override
 	public GithubConfig get() {
-		return ConfigFactory.create(GithubConfig.class);
+		return ConfigFactory.create(GithubConfig.class, System.getProperties());
 	}
 }

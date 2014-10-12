@@ -1,10 +1,9 @@
-package com.carlosbecker;
+package com.carlosbecker.github;
 
 import javax.inject.Inject;
 
 import org.eclipse.egit.github.core.client.GitHubClient;
 
-import com.carlosbecker.github.GithubConfig;
 import com.google.inject.Provider;
 
 public class GitHubClientProvider implements Provider<GitHubClient> {

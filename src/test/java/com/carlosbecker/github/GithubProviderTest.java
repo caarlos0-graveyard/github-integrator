@@ -1,9 +1,8 @@
 package com.carlosbecker.github;
 
-import static com.google.common.collect.Collections2.transform;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import java.util.Collection;
+import java.util.Iterator;
 import javax.inject.Inject;
 import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.PullRequest;
@@ -18,7 +17,6 @@ import com.carlosbecker.GithubModule;
 import com.carlosbecker.TestPropertiesLoader;
 import com.carlosbecker.guice.GuiceModules;
 import com.carlosbecker.guice.GuiceTestRunner;
-import com.google.common.base.Function;
 
 @GuiceModules(GithubModule.class)
 @RunWith(GuiceTestRunner.class)
@@ -32,7 +30,7 @@ public class GithubProviderTest {
     private GitHubClient client;
 
     @Inject
-    private GithubConfig config;
+    private ScriptedRepositories repositories;
 
     @Test
     public void testProvided() throws Exception {
@@ -41,23 +39,17 @@ public class GithubProviderTest {
 
     @Test
     public void testGetComments() throws Exception {
-        Collection<RepositoryId> repositories = transform(config.repos(),
-                new Function<String, RepositoryId>() {
-                    @Override
-                    public RepositoryId apply(String repo) {
-                        int slash = repo.indexOf('/');
-                        return new RepositoryId(repo.substring(0, slash),
-                                repo.substring(slash + 1));
-                    }
-                });
-
         PullRequestService service = new PullRequestService(client);
         IssueService issuer = new IssueService(client);
-        for (RepositoryId repo : repositories)
+        Iterator<ScriptedRepository> iterator = repositories.iterator();
+        while (iterator.hasNext()) {
+            ScriptedRepository scriptedRepository = iterator.next();
+            RepositoryId repo = scriptedRepository.getId();
             for (PullRequest pr : service.getPullRequests(repo, "open"))
                 for (Comment comment : issuer.getComments(repo, pr.getNumber()))
                     if (comment.getBody()
                             .equalsIgnoreCase("deploy this please"))
                         System.out.println("FOI!");
+        }
     }
 }

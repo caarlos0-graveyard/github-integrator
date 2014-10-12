@@ -1,6 +1,5 @@
 package com.carlosbecker.github;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import javax.inject.Inject;
@@ -21,7 +20,7 @@ public class GithubConfigProviderTest {
     }
 
     @Inject
-    private GithubConfig config;
+    private IntegratorConfig config;
 
     @Test
     public void testConfigProvided() throws Exception {
@@ -35,6 +34,6 @@ public class GithubConfigProviderTest {
 
     @Test
     public void testRepos() throws Exception {
-        assertThat(config.repos().size(), equalTo(2));
+        assertThat(config.executions(), notNullValue());
     }
 }

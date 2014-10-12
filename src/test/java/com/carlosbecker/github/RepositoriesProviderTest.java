@@ -1,10 +1,9 @@
 package com.carlosbecker.github;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import java.util.List;
 import javax.inject.Inject;
-import org.eclipse.egit.github.core.RepositoryId;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,11 +21,17 @@ public class RepositoriesProviderTest {
     }
 
     @Inject
-    @Repositories
-    private List<RepositoryId> repositories;
+    private ScriptedRepositories repositories;
 
     @Test
     public void testProvided() throws Exception {
         assertThat(repositories, notNullValue());
+    }
+
+    @Test
+    public void testCorrectParsing() throws Exception {
+        ScriptedRepository repository = repositories.iterator().next();
+        assertThat(repository.getId().getOwner(), equalTo("caarlos0"));
+        assertThat(repository.getId().getName(), equalTo("github-integrator"));
     }
 }

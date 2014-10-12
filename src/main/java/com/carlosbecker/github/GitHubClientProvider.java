@@ -6,7 +6,7 @@ import com.google.inject.Provider;
 
 public class GitHubClientProvider implements Provider<GitHubClient> {
     @Inject
-    private GithubConfig config;
+    private IntegratorConfig config;
 
     @Override
     public GitHubClient get() {

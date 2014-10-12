@@ -1,21 +1,21 @@
 package com.carlosbecker.github;
 
-import static com.google.common.collect.FluentIterable.from;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.util.List;
-import java.util.Map.Entry;
-import java.util.Properties;
 import javax.inject.Inject;
-import lombok.extern.log4j.Log4j;
-import org.eclipse.egit.github.core.RepositoryId;
-import com.google.common.base.Function;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.google.inject.Provider;
 
-@Log4j
 public class ScriptedRepositoriesProvider implements
         Provider<ScriptedRepositories> {
+    private static final Type TYPE = new TypeToken<List<ScriptedRepository>>() {}
+            .getType();
     private final IntegratorConfig config;
 
     @Inject
@@ -31,32 +31,17 @@ public class ScriptedRepositoriesProvider implements
     }
 
     private ScriptedRepositories parse() {
-        Properties executions = new Properties();
         try {
-            executions.load(new FileInputStream(new File(config.executions())));
-        } catch (IOException e) {
-            log.error("Failed to load executions script", e);
-            return new ScriptedRepositories(null);
-        }
-        List<ScriptedRepository> repositories = from(executions.entrySet())
-                .transform(new ScriptedRepositoryMapper()).toList();
-        return new ScriptedRepositories(repositories);
-    }
-
-    class ScriptedRepositoryMapper implements
-            Function<Entry<Object, Object>, ScriptedRepository> {
-        @Override
-        public ScriptedRepository apply(Entry<Object, Object> entry) {
-            return ScriptedRepository.builder()
-                    .id(parse(entry.getKey().toString()))
-                    .script(entry.getValue().toString()).build();
+            return new ScriptedRepositories(new Gson().fromJson(loadFile(),
+                    TYPE));
+        } catch (FileNotFoundException e) {
+            return null;
         }
     }
 
-    private RepositoryId parse(String repo) {
-        repo = repo.replaceAll(" ", "");
-        int slash = repo.indexOf('/');
-        return new RepositoryId(repo.substring(0, slash),
-                repo.substring(slash + 1));
+    private BufferedReader loadFile() throws FileNotFoundException {
+        File file = new File(config.executions());
+        FileInputStream inputStream = new FileInputStream(file);
+        return new BufferedReader(new InputStreamReader(inputStream));
     }
 }

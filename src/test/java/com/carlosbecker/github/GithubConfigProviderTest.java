@@ -1,4 +1,4 @@
-package com.carlosbecker;
+package com.carlosbecker.github;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.carlosbecker.ConfigModule;
 import com.carlosbecker.github.GithubConfig;
 import com.carlosbecker.guice.GuiceModules;
 import com.carlosbecker.guice.GuiceTestRunner;

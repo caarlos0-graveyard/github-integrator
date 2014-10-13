@@ -1,5 +1,6 @@
 package com.carlosbecker;
 
+import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
 import static org.mockito.Matchers.any;
@@ -8,9 +9,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.mockito.internal.verification.VerificationModeFactory.times;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.PullRequest;
@@ -25,6 +26,7 @@ import org.mockito.Mock;
 import com.carlosbecker.model.ScriptedRepositories;
 import com.carlosbecker.model.ScriptedRepository;
 import com.carlosbecker.process.ProcessExecutor;
+import com.google.common.base.Function;
 
 public class MainIntegratorTest {
     private MainIntegrator integrator;
@@ -59,21 +61,9 @@ public class MainIntegratorTest {
     }
 
     @Test
-    public void testPRWithNullComment() throws Exception {
-        mockPullRequest();
-        when(issueService.getComments(any(IRepositoryIdProvider.class), eq(1)))
-                .thenReturn(asList(new Comment()));
-        integrator.work();
-        verifyZeroInteractions(executor);
-    }
-
-    @Test
     public void testPRWithEmptyComment() throws Exception {
         mockPullRequest();
-        Comment emptyComment = new Comment();
-        emptyComment.setBody("");
-        when(issueService.getComments(any(IRepositoryIdProvider.class), eq(1)))
-                .thenReturn(asList(emptyComment));
+        mockComments("");
         integrator.work();
         verifyZeroInteractions(executor);
     }
@@ -81,10 +71,7 @@ public class MainIntegratorTest {
     @Test
     public void testWithNonMatchingComment() throws Exception {
         mockPullRequest();
-        Comment comment = new Comment();
-        comment.setBody("This will not match. Don't do it.");
-        when(issueService.getComments(any(IRepositoryIdProvider.class), eq(1)))
-                .thenReturn(asList(comment));
+        mockComments("This will not match. Don't do it.");
         integrator.work();
         verifyZeroInteractions(executor);
     }
@@ -92,19 +79,42 @@ public class MainIntegratorTest {
     @Test
     public void testMatchingComments() throws Exception {
         mockPullRequest();
-        Comment comment1 = new Comment();
-        comment1.setBody("do it");
-        Comment comment2 = new Comment();
-        comment2.setBody("do IT");
-        when(issueService.getComments(any(IRepositoryIdProvider.class), eq(1)))
-                .thenReturn(asList(comment1, comment2));
+        mockComments("do it", "do IT");
         integrator.work();
-        verify(executor, times(2)).execute("echo", "user", "repo", "1");
+        verify(executor).execute("echo", "user", "repo", "1");
+    }
+
+    @Test
+    public void testWhenOneWasAlreadyExecuted() throws Exception {
+        mockPullRequest();
+        mockComments("do it", "Ok, working on 'do it'...");
+        integrator.work();
+        verifyZeroInteractions(executor);
+    }
+
+    private void mockComments(String... messages) throws IOException {
+        List<Comment> comments = from(asList(messages))
+                .transform(new Function<String, Comment>() {
+                    @Override
+                    public Comment apply(String input) {
+                        Comment comment = new Comment();
+                        comment.setBody(input);
+                        return comment;
+                    }
+                })
+                .toList();
+        when(issueService.getComments(any(IRepositoryIdProvider.class), eq(1)))
+                .thenReturn(comments);
     }
 
     private void mockPullRequest() throws IOException {
         when(repositories.iterator())
                 .thenReturn(asList(new ScriptedRepository("user", "repo", "do it", "echo")).iterator());
+        when(prService.getPullRequests(any(IRepositoryIdProvider.class), eq("open")))
+                .thenReturn(asList(mockPR()));
+    }
+
+    private PullRequest mockPR() {
         PullRequest pr = new PullRequest();
         PullRequestMarker base = new PullRequestMarker();
         User owner = new User();
@@ -115,7 +125,6 @@ public class MainIntegratorTest {
         base.setRepo(repo);
         pr.setBase(base);
         pr.setNumber(1);
-        when(prService.getPullRequests(any(IRepositoryIdProvider.class), eq("open")))
-                .thenReturn(asList(pr));
+        return pr;
     }
 }

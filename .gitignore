@@ -80,3 +80,4 @@ Temporary Items
 /target/
 .project
 .classpath
+app.log

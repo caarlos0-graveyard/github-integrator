@@ -81,7 +81,7 @@ public class MainIntegratorTest {
         mockPullRequest();
         mockComments("do it", "do IT");
         integrator.work();
-        verify(executor).execute("echo", "user", "repo", "1");
+        verify(executor).execute("echo", "user", "repo", "feature/my-branch", "1");
     }
 
     @Test
@@ -116,14 +116,15 @@ public class MainIntegratorTest {
 
     private PullRequest mockPR() {
         PullRequest pr = new PullRequest();
-        PullRequestMarker base = new PullRequestMarker();
+        PullRequestMarker head = new PullRequestMarker();
         User owner = new User();
         owner.setLogin("user");
         Repository repo = new Repository();
         repo.setName("repo");
         repo.setOwner(owner);
-        base.setRepo(repo);
-        pr.setBase(base);
+        head.setRepo(repo);
+        pr.setHead(head);
+        head.setRef("feature/my-branch");
         pr.setNumber(1);
         return pr;
     }

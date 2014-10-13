@@ -1,16 +1,22 @@
 package com.carlosbecker;
 
 import static java.lang.String.format;
+
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.inject.Inject;
+
 import lombok.extern.log4j.Log4j;
+
 import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.PullRequest;
+import org.eclipse.egit.github.core.PullRequestMarker;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.service.IssueService;
 import org.eclipse.egit.github.core.service.PullRequestService;
+
 import com.carlosbecker.model.ScriptedRepositories;
 import com.carlosbecker.model.ScriptedRepository;
 import com.carlosbecker.process.ProcessExecutor;
@@ -61,8 +67,9 @@ public class MainIntegrator {
         log.info("Running " + repository.getScript() + "...");
         issueService.createComment(repository.getOwner(), repository.getName(), pr.getNumber(),
                 repository.getReplyMessage());
-        Repository baseRepo = pr.getBase().getRepo();
-        executor.execute(repository.getScript(), baseRepo.getOwner().getLogin(), baseRepo.getName(),
-                "" + pr.getNumber());
+        PullRequestMarker head = pr.getHead();
+        Repository headRepo = head.getRepo();
+		executor.execute(repository.getScript(), headRepo.getOwner().getLogin(), headRepo.getName(),
+				head.getRef(),"" + pr.getNumber());
     }
 }

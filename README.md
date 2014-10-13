@@ -1,6 +1,6 @@
 # github-integrator
 
-Binds GitHub PullRequest comments to shell executions!
+Binds GitHub's PullRequests comments to shell executions.
 
 ## Usage
 

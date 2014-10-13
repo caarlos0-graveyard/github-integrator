@@ -33,7 +33,12 @@ public class GithubConfigProviderTest {
     }
 
     @Test
-    public void testRepos() throws Exception {
+    public void testExecutions() throws Exception {
         assertThat(config.executions(), notNullValue());
+    }
+
+    @Test
+    public void testPeriod() throws Exception {
+        assertThat(config.period(), notNullValue());
     }
 }

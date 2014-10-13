@@ -3,28 +3,23 @@ package com.carlosbecker.github;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import javax.inject.Inject;
-import org.eclipse.egit.github.core.client.GitHubClient;
-import org.junit.BeforeClass;
+import org.eclipse.egit.github.core.service.PullRequestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import com.carlosbecker.GithubModule;
-import com.carlosbecker.TestPropertiesLoader;
 import com.carlosbecker.guice.GuiceModules;
 import com.carlosbecker.guice.GuiceTestRunner;
 
-@GuiceModules(GithubModule.class)
 @RunWith(GuiceTestRunner.class)
-public class GithubProviderTest {
-    @BeforeClass
-    public static void before() throws Exception {
-        TestPropertiesLoader.load();
-    }
+@GuiceModules(GithubModule.class)
+public class PullRequestServiceProviderTest {
 
     @Inject
-    private GitHubClient client;
+    private PullRequestService service;
 
     @Test
     public void testProvided() throws Exception {
-        assertThat(client, notNullValue());
+        assertThat(service, notNullValue());
+        assertThat(service.getClient(), notNullValue());
     }
 }

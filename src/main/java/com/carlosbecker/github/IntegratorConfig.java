@@ -6,6 +6,8 @@ public interface IntegratorConfig extends Config {
     @Key("github.oauth")
     String oauth();
 
-    @Key("executions")
     String executions();
+
+    @DefaultValue("30")
+    int period();
 }

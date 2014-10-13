@@ -1,4 +1,4 @@
-package com.carlosbecker.github;
+package com.carlosbecker.model;
 
 import java.util.Iterator;
 import java.util.List;

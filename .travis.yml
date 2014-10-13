@@ -4,3 +4,5 @@ jdk:
 before_install:
   - git clone https://github.com/caarlos0/guice-junit-test-runner.git
   - mvn clean install -f guice-junit-test-runner/pom.xml
+notifications:
+  email: false

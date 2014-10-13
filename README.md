@@ -2,6 +2,8 @@
 
 Binds GitHub's PullRequests comments to shell executions.
 
+![screenshot](/image.png)
+
 ## Usage
 
 - You will have to create a `.properties` file following the example [here][props];

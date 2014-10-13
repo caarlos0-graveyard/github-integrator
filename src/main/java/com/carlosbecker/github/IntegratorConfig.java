@@ -8,6 +8,9 @@ public interface IntegratorConfig extends Config {
 
     String executions();
 
-    @DefaultValue("30")
+    @DefaultValue("60")
     int period();
+
+    @DefaultValue("true")
+    boolean loop();
 }

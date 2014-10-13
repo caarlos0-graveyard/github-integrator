@@ -21,5 +21,5 @@ You can execute the app like this:
 java -jar github-integrator.jar my.properties
 ```
 
-[props]: /caarlos0/github-integrator/blob/master/src/test/resources/test.properties
-[executions]: /caarlos0/github-integrator/blob/master/src/test/resources/test.executions.json
+[props]: /src/test/resources/test.properties
+[executions]: /src/test/resources/test.executions.json

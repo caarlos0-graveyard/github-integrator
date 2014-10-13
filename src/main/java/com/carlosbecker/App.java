@@ -1,36 +1,41 @@
 package com.carlosbecker;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.inject.Guice.createInjector;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import javax.inject.Inject;
+import lombok.NonNull;
 import lombok.extern.log4j.Log4j;
 import com.carlosbecker.github.IntegratorConfig;
-import com.google.inject.Injector;
 
 @Log4j
 public class App {
-    @Inject
-    private IntegratorConfig config;
-    @Inject
-    private MainIntegrator integrator;
+    private final IntegratorConfig config;
+    private final MainIntegrator integrator;
 
-    private void run() throws Exception {
-        do {
-            log.info("Running...");
-            integrator.work();
-            Thread.sleep(config.period() * 1000);
-        } while (true);
+    @Inject
+    public App(IntegratorConfig config, MainIntegrator integrator) {
+        this.config = config;
+        this.integrator = integrator;
     }
 
-    public static void main(String[] args) throws Exception {
+    public void run() throws Exception {
+        do {
+            runOnce();
+        } while (config.loop());
+    }
+
+    private void runOnce() throws IOException, InterruptedException {
+        log.info("Running...");
+        integrator.work();
+        Thread.sleep(config.period() * 1000);
+    }
+
+    public static void main(@NonNull String[] args) throws Exception {
         log.info("Starting up...");
-        if (!isNullOrEmpty(args[0]))
-            System.getProperties().load(new FileInputStream(new File(args[0])));
-        Injector injector = createInjector(new ConfigModule(), new GithubModule());
-        App app = injector.getInstance(App.class);
-        app.run();
+        System.getProperties().load(new FileInputStream(new File(args[0])));
+        createInjector(new ConfigModule(), new GithubModule()).getInstance(App.class).run();
     }
 
 }

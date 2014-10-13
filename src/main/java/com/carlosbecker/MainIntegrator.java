@@ -39,19 +39,28 @@ public class MainIntegrator {
     }
 
     private void work(ScriptedRepository scriptedRepository) throws IOException {
-        // TODO: it may process the same thing more than one time!!
         List<PullRequest> prlist = prService.getPullRequests(scriptedRepository.getId(), "open");
         log.info(format("Repository %s has %d open PRs...", scriptedRepository.getId().toString(), prlist.size()));
         for (PullRequest pr : prlist)
-            for (Comment comment : issueService.getComments(scriptedRepository.getId(), pr.getNumber()))
-                if (scriptedRepository.should(comment.getBody()))
-                    work(scriptedRepository, pr);
+            process(scriptedRepository, pr);
+    }
+
+    private void process(ScriptedRepository scriptedRepository, PullRequest pr) throws IOException {
+        List<Comment> comments = issueService.getComments(scriptedRepository.getId(), pr.getNumber());
+        int asked = 0, executed = 0;
+        for (Comment comment : comments)
+            if (scriptedRepository.isAsking(comment.getBody()))
+                asked++;
+            else if (scriptedRepository.isReply(comment.getBody()))
+                executed++;
+        if (asked > executed)
+            work(scriptedRepository, pr);
     }
 
     private void work(ScriptedRepository repository, PullRequest pr) throws IOException {
         log.info("Running " + repository.getScript() + "...");
         issueService.createComment(repository.getOwner(), repository.getName(), pr.getNumber(),
-                format("Ok, working on '%s'...", repository.getRegex()));
+                repository.getReplyMessage());
         Repository baseRepo = pr.getBase().getRepo();
         executor.execute(repository.getScript(), baseRepo.getOwner().getLogin(), baseRepo.getName(),
                 "" + pr.getNumber());

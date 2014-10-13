@@ -1,4 +1,4 @@
-# github-integrator
+# github-integrator [![Build Status](https://travis-ci.org/caarlos0/github-integrator.svg?branch=master)](https://travis-ci.org/caarlos0/github-integrator)
 
 Binds GitHub's PullRequests comments to shell executions.
 

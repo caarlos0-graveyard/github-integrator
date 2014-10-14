@@ -1,5 +1,6 @@
 package com.carlosbecker.process;
 
+import static java.util.Arrays.asList;
 import javax.inject.Inject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +17,7 @@ public class ProcessExecutorTest {
 
     @Test
     public void testName() throws Exception {
-        executor.execute("./src/test/resources/sample.sh", "user", "repo", "whatever");
+        executor.execute("./src/test/resources/sample.sh", asList("user", "repo", "whatever"));
     }
 
 }

@@ -42,4 +42,11 @@ public class ScriptedRepositoryTest {
         assertThat(subject.isAsking("deploy this to staging, please..."), equalTo(true));
         assertThat(subject.getParams("deploy this to production, please"), equalTo(asList("production", ", please")));
     }
+
+    @Test
+    public void testIsReply() throws Exception {
+        final ScriptedRepository subject = new ScriptedRepository("", "",
+                "deploy this to (production|staging)(,? please)?", "");
+        assertThat(subject.isReply("Ok, working on 'deploy this to production, please'..."), equalTo(true));
+    }
 }

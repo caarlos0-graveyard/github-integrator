@@ -26,7 +26,6 @@ import org.mockito.Mock;
 import com.carlosbecker.model.ScriptedRepositories;
 import com.carlosbecker.model.ScriptedRepository;
 import com.carlosbecker.process.ProcessExecutor;
-import com.google.common.base.Function;
 
 public class MainIntegratorTest {
     private MainIntegrator integrator;
@@ -81,7 +80,7 @@ public class MainIntegratorTest {
         mockPullRequest();
         mockComments("do it", "do IT");
         integrator.work();
-        verify(executor).execute("echo", "user", "repo", "feature/my-branch", "1");
+        verify(executor).execute("echo", asList("user", "repo", "feature/my-branch", "1"));
     }
 
     @Test
@@ -93,33 +92,30 @@ public class MainIntegratorTest {
     }
 
     private void mockComments(String... messages) throws IOException {
-        List<Comment> comments = from(asList(messages))
-                .transform(new Function<String, Comment>() {
-                    @Override
-                    public Comment apply(String input) {
-                        Comment comment = new Comment();
-                        comment.setBody(input);
-                        return comment;
-                    }
+        final List<Comment> comments = from(asList(messages))
+                .transform(input -> {
+                    final Comment comment = new Comment();
+                    comment.setBody(input);
+                    return comment;
                 })
                 .toList();
         when(issueService.getComments(any(IRepositoryIdProvider.class), eq(1)))
-                .thenReturn(comments);
+        .thenReturn(comments);
     }
 
     private void mockPullRequest() throws IOException {
         when(repositories.iterator())
-                .thenReturn(asList(new ScriptedRepository("user", "repo", "do it", "echo")).iterator());
+        .thenReturn(asList(new ScriptedRepository("user", "repo", "do it", "echo")).iterator());
         when(prService.getPullRequests(any(IRepositoryIdProvider.class), eq("open")))
-                .thenReturn(asList(mockPR()));
+        .thenReturn(asList(mockPR()));
     }
 
     private PullRequest mockPR() {
-        PullRequest pr = new PullRequest();
-        PullRequestMarker head = new PullRequestMarker();
-        User owner = new User();
+        final PullRequest pr = new PullRequest();
+        final PullRequestMarker head = new PullRequestMarker();
+        final User owner = new User();
         owner.setLogin("user");
-        Repository repo = new Repository();
+        final Repository repo = new Repository();
         repo.setName("repo");
         repo.setOwner(owner);
         head.setRepo(repo);

@@ -1,5 +1,6 @@
 package com.carlosbecker.model;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -41,6 +42,14 @@ public class ScriptedRepositoryTest {
         assertThat(subject.isAsking("deploy this to production..."), equalTo(true));
         assertThat(subject.isAsking("deploy this to staging, please..."), equalTo(true));
         assertThat(subject.getParams("deploy this to production, please"), equalTo(asList("production", ", please")));
+    }
+
+    @Test
+    public void testGetParamsWithNoBody() throws Exception {
+        final ScriptedRepository subject = new ScriptedRepository("", "", "", "");
+        assertThat(subject.getParams(null), equalTo(newArrayList()));
+        assertThat(subject.getParams(""), equalTo(newArrayList()));
+        assertThat(subject.getParams("  "), equalTo(newArrayList()));
     }
 
     @Test

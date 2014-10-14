@@ -12,14 +12,16 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.egit.github.core.RepositoryId;
 
-@Getter
 @RequiredArgsConstructor
 public class ScriptedRepository {
     public static final String REPLY_START = "Ok, working on '";
     public static final String REPLY_END = "'...";
+    @Getter
     private final String owner;
+    @Getter
     private final String name;
     private final String regex;
+    @Getter
     private final String script;
 
     public RepositoryId getId() {

@@ -26,3 +26,7 @@ java -jar github-integrator.jar my.properties
 
 [props]: /src/test/resources/test.properties
 [executions]: /src/test/resources/test.executions.json
+
+## Throughput
+
+[![Throughput Graph](https://graphs.waffle.io/caarlos0/github-integrator/throughput.svg)](https://waffle.io/caarlos0/github-integrator/metrics)

@@ -8,8 +8,8 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import com.carlosbecker.ScriptedRepositoriesProvider;
 import com.carlosbecker.model.ScriptedRepositories;
+import com.carlosbecker.model.ScriptedRepositoriesProvider;
 
 public class ScriptedRepositoriesProviderMapperTest {
     private ScriptedRepositoriesProvider provider;

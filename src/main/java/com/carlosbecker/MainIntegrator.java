@@ -75,7 +75,7 @@ public class MainIntegrator {
 
     private void verifyPossiblePendency(final String key, final Map<List<String>, Long> pendencies,
             ScriptedRepository repository) {
-        if (repository.isAsking(key)) {
+        if (repository.isAsk(key)) {
             final List<String> params = repository.getParams(key);
             pendencies.put(params, pendencies.getOrDefault(params, 0L) + 1);
         } else if (repository.isReply(key)) {

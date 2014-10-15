@@ -28,7 +28,7 @@ public class ScriptedRepository {
         return new RepositoryId(owner, name);
     }
 
-    public boolean isAsking(String body) {
+    public boolean isAsk(String body) {
         return patternFor(regex)
                 .matcher(body)
                 .matches();
@@ -43,7 +43,7 @@ public class ScriptedRepository {
     }
 
     public boolean isReply(String body) {
-        return isAsking(extractOriginalAsk(body));
+        return isAsk(extractOriginalAsk(body));
     }
 
     private String extractOriginalAsk(String body) {
@@ -57,7 +57,7 @@ public class ScriptedRepository {
     }
 
     public List<String> getParams(String body) {
-        if (isNullOrEmpty(body) || !isAsking(body))
+        if (isNullOrEmpty(body) || !isAsk(body))
             return newArrayList();
         return buildParamList(body);
     }

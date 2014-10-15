@@ -15,7 +15,8 @@ Right now, the applications passes the following parameters to the script:
 - `$1`: the pull request origin repository owner login (e.g.: caarlos0);
 - `$2`: the pull request origin repository name (e.g.: github-integrator);
 - `$3`: the pull request origin branch (e.g.: feature/more-parameters);
-- `$4`: the pull request number.
+- `$4`: the pull request number;
+- `$5` to `$n`: the group values from the regex expression.
 
 
 You can execute the app like this:

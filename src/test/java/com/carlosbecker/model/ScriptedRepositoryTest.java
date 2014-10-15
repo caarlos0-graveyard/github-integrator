@@ -10,7 +10,7 @@ public class ScriptedRepositoryTest {
 
     @Test
     public void testBasicRegex() throws Exception {
-        final ScriptedRepository subject = new ScriptedRepository("", "", "test this please", "");
+        final ScriptedRepository subject = new ScriptedRepository("", "", "test this", "");
         assertThat(subject.isAsk("test this please"), equalTo(true));
         assertThat(subject.isAsk("test this please..."), equalTo(true));
         assertThat(subject.isAsk("test this please!"), equalTo(true));
@@ -21,10 +21,11 @@ public class ScriptedRepositoryTest {
 
     @Test
     public void testRegexWithOptional() throws Exception {
-        final ScriptedRepository subject = new ScriptedRepository("", "", "test this(,? please)?", "");
+        final ScriptedRepository subject = new ScriptedRepository("", "", "test this( for me)?", "");
         assertThat(subject.isAsk("test this, please"), equalTo(true));
-        assertThat(subject.isAsk("test this..."), equalTo(true));
+        assertThat(subject.isAsk("test this for me..."), equalTo(true));
         assertThat(subject.isAsk("test this, please!"), equalTo(true));
+        assertThat(subject.isAsk("test this for me, please!"), equalTo(true));
         assertThat(subject.isAsk("test this!!"), equalTo(true));
         assertThat(subject.isAsk("test thIs"), equalTo(true));
         assertThat(subject.isAsk("dont test this, please"), equalTo(false));
@@ -32,16 +33,15 @@ public class ScriptedRepositoryTest {
 
     @Test
     public void testGetGroups() throws Exception {
-        final ScriptedRepository subject = new ScriptedRepository("", "",
-                "deploy this to (production|staging)(,? please)?", "");
+        final ScriptedRepository subject = new ScriptedRepository("", "", "deploy this to (production|staging)", "");
         assertThat(subject.isAsk("deploy this, please"), equalTo(false));
         assertThat(subject.isAsk("deploy this..."), equalTo(false));
         assertThat(subject.isAsk("deploy this, please!"), equalTo(false));
         assertThat(subject.isAsk("deploy this!!"), equalTo(false));
         assertThat(subject.isAsk("deploy thIs"), equalTo(false));
-        assertThat(subject.isAsk("deploy this to production..."), equalTo(true));
+        assertThat(subject.isAsk("deploy this to production please..."), equalTo(true));
         assertThat(subject.isAsk("deploy this to staging, please..."), equalTo(true));
-        assertThat(subject.getParams("deploy this to production, please"), equalTo(asList("production", ", please")));
+        assertThat(subject.getParams("deploy this to production, please"), equalTo(asList("production")));
     }
 
     @Test
@@ -54,10 +54,9 @@ public class ScriptedRepositoryTest {
 
     @Test
     public void testReply() throws Exception {
-        final ScriptedRepository subject = new ScriptedRepository("", "",
-                "deploy this to (production|staging)(,? please)?", "");
+        final ScriptedRepository subject = new ScriptedRepository("", "", "deploy this to (production|staging)", "");
         assertThat(subject.isReply("Ok, working on 'deploy this to production, please'..."), equalTo(true));
         assertThat(subject.getReplyParams("Ok, working on 'deploy this to production, please'..."),
-                equalTo(asList("production", ", please")));
+                equalTo(asList("production")));
     }
 }

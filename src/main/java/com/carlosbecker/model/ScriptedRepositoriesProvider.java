@@ -1,4 +1,4 @@
-package com.carlosbecker;
+package com.carlosbecker.model;
 
 import static com.google.common.collect.Lists.newArrayList;
 import java.io.BufferedReader;
@@ -10,8 +10,6 @@ import java.lang.reflect.Type;
 import java.util.List;
 import javax.inject.Inject;
 import com.carlosbecker.github.IntegratorConfig;
-import com.carlosbecker.model.ScriptedRepositories;
-import com.carlosbecker.model.ScriptedRepository;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Provider;

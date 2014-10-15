@@ -7,6 +7,7 @@ import com.carlosbecker.github.GitHubClientProvider;
 import com.carlosbecker.github.IssueServiceProvider;
 import com.carlosbecker.github.PullRequestServiceProvider;
 import com.carlosbecker.model.ScriptedRepositories;
+import com.carlosbecker.model.ScriptedRepositoriesProvider;
 import com.google.inject.AbstractModule;
 
 public class GithubModule extends AbstractModule {

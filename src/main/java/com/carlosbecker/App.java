@@ -1,13 +1,12 @@
 package com.carlosbecker;
 
 import static com.google.inject.Guice.createInjector;
+import com.carlosbecker.github.IntegratorConfig;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import javax.inject.Inject;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j;
-import com.carlosbecker.github.IntegratorConfig;
 
 @Log4j
 public class App {
@@ -26,7 +25,7 @@ public class App {
         } while (config.loop());
     }
 
-    private void runOnce() throws IOException, InterruptedException {
+    private void runOnce() throws InterruptedException {
         log.info("Running...");
         integrator.work();
         Thread.sleep(config.period() * 1000);

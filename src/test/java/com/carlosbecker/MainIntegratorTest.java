@@ -54,7 +54,7 @@ public class MainIntegratorTest {
     @Test
     public void testPRWithNoComments() throws Exception {
         mockPullRequest();
-        mockRepositories();
+        mockRepository();
         when(issueService.getComments(any(IRepositoryIdProvider.class), eq(1))).thenReturn(newArrayList());
         integrator.work();
         verifyZeroInteractions(executor);
@@ -63,7 +63,7 @@ public class MainIntegratorTest {
     @Test
     public void testPRWithEmptyComment() throws Exception {
         mockPullRequest();
-        mockRepositories();
+        mockRepository();
         mockComments("");
         integrator.work();
         verifyZeroInteractions(executor);
@@ -72,7 +72,7 @@ public class MainIntegratorTest {
     @Test
     public void testWithNonMatchingComment() throws Exception {
         mockPullRequest();
-        mockRepositories();
+        mockRepository();
         mockComments("This will not match. Don't do it.");
         integrator.work();
         verifyZeroInteractions(executor);
@@ -81,7 +81,7 @@ public class MainIntegratorTest {
     @Test
     public void testMatchingComments() throws Exception {
         mockPullRequest();
-        mockRepositories();
+        mockRepository();
         mockComments("do it", "do IT");
         integrator.work();
         verify(executor).execute("echo", asList("user", "repo", "feature/my-branch", "1"));
@@ -90,7 +90,7 @@ public class MainIntegratorTest {
     @Test
     public void testWhenOneWasAlreadyExecuted() throws Exception {
         mockPullRequest();
-        mockRepositories();
+        mockRepository();
         mockComments("do it", "Ok, working on 'do it'...");
         integrator.work();
         verifyZeroInteractions(executor);
@@ -99,7 +99,7 @@ public class MainIntegratorTest {
     @Test
     public void testWhenOneWasAlreadyExecutedWithDifferentParams() throws Exception {
         mockPullRequest();
-        mockRepositories("do (it|that)");
+        mockRepository("do (it|that)");
         mockComments("do it", "Ok, working on 'do it'...", "Ok, working on 'do it'...", "do that");
         integrator.work();
         verify(executor).execute("echo", asList("user", "repo", "feature/my-branch", "1", "that"));
@@ -109,11 +109,20 @@ public class MainIntegratorTest {
     @Test(expected = RuntimeException.class)
     public void testCommentError() throws Exception {
         mockPullRequest();
-        mockRepositories();
+        mockRepository();
         mockComments("do it");
         when(issueService.createComment(eq("user"), eq("repo"), eq(1), eq("Ok, working on 'do it'..."))).thenThrow(
                 IOException.class);
         integrator.work();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGithubParseError() throws Exception {
+        final ScriptedRepository repo = mockRepository();
+        when(prService.getPullRequests(eq(repo.getId()), eq("open"))).thenThrow(IOException.class);
+        integrator.work();
+        verifyZeroInteractions(issueService);
     }
 
     private void mockComments(String... messages) throws IOException {
@@ -126,13 +135,15 @@ public class MainIntegratorTest {
         when(issueService.getComments(any(IRepositoryIdProvider.class), eq(1))).thenReturn(comments);
     }
 
-    private void mockRepositories(String regex) {
+    private ScriptedRepository mockRepository(String regex) {
+        final ScriptedRepository repository = new ScriptedRepository("user", "repo", regex, "echo");
         when(repositories.iterator()).thenReturn(
-                asList(new ScriptedRepository("user", "repo", regex, "echo")).iterator());
+                asList(repository).iterator());
+        return repository;
     }
 
-    private void mockRepositories() {
-        mockRepositories("do it");
+    private ScriptedRepository mockRepository() {
+        return mockRepository("do it");
     }
 
     private void mockPullRequest() throws IOException {

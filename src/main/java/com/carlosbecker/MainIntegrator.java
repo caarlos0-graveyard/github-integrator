@@ -42,10 +42,17 @@ public class MainIntegrator {
         this.executor = executor;
     }
 
-    public void work() throws IOException {
+    public void work() {
         final Iterator<ScriptedRepository> iterator = repositories.iterator();
-        while (iterator.hasNext())
-            work(iterator.next());
+        while (iterator.hasNext()) {
+            final ScriptedRepository repository = iterator.next();
+            try {
+                work(repository);
+            } catch (final IOException e) {
+                log.info(String.format("Failed to process repository '%s' due to a network or github error.",
+                        repository.getId()), e);
+            }
+        }
     }
 
     private void work(ScriptedRepository repository) throws IOException {

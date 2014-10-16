@@ -67,9 +67,8 @@ public class MainIntegrator {
         final Map<String, Long> reducedComments = comments.stream()
                 .map(comment -> comment.getBody())
                 .collect(groupingBy(identity(), counting()));
-        getPendencies(repository, reducedComments)
-        .entrySet()
-        .forEach(request -> processPendency(repository, pr, request));
+        getPendencies(repository, reducedComments).entrySet().forEach(
+                request -> processPendency(repository, pr, request));
     }
 
     private Map<List<String>, Long> getPendencies(ScriptedRepository repository, final Map<String, Long> comments) {
@@ -103,7 +102,7 @@ public class MainIntegrator {
     private void work(ScriptedRepository repository, PullRequest pr, List<String> params) throws IOException {
         log.info("Running " + repository.getScript() + "...");
         issueService.createComment(repository.getOwner(), repository.getName(), pr.getNumber(),
-                repository.getReplyMessage());
+                repository.getReplyMessage(params));
         executor.execute(repository.getScript(), buildParamList(pr, params));
     }
 

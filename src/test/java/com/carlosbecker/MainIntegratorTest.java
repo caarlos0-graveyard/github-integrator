@@ -9,6 +9,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 import com.carlosbecker.model.ScriptedRepositories;
 import com.carlosbecker.model.ScriptedRepository;
 import com.carlosbecker.process.ProcessExecutor;
@@ -23,6 +24,7 @@ import org.eclipse.egit.github.core.service.PullRequestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +50,7 @@ public class MainIntegratorTest {
     public void testNoRepositories() throws Exception {
         when(repositories.iterator()).thenReturn(new ArrayList<ScriptedRepository>().iterator());
         integrator.work();
+        verifyZeroInteractions(issueService);
         verifyZeroInteractions(prService);
     }
 
@@ -57,6 +60,8 @@ public class MainIntegratorTest {
         mockRepository();
         when(issueService.getComments(any(IRepositoryIdProvider.class), eq(1))).thenReturn(newArrayList());
         integrator.work();
+        verify(issueService, times(0)).createComment(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
+                Mockito.anyString());
         verifyZeroInteractions(executor);
     }
 
@@ -66,6 +71,8 @@ public class MainIntegratorTest {
         mockRepository();
         mockComments("");
         integrator.work();
+        verify(issueService, times(0)).createComment(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
+                Mockito.anyString());
         verifyZeroInteractions(executor);
     }
 
@@ -75,15 +82,18 @@ public class MainIntegratorTest {
         mockRepository();
         mockComments("This will not match. Don't do it.");
         integrator.work();
+        verify(issueService, times(0)).createComment(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
+                Mockito.anyString());
         verifyZeroInteractions(executor);
     }
 
     @Test
     public void testMatchingComments() throws Exception {
         mockPullRequest();
-        mockRepository();
+        final ScriptedRepository repo = mockRepository();
         mockComments("do it", "do IT");
         integrator.work();
+        verify(issueService).createComment(repo.getOwner(), repo.getName(), 1, "Ok, working on 'do it'...");
         verify(executor).execute("echo", asList("user", "repo", "feature/my-branch", "1"));
     }
 
@@ -93,15 +103,18 @@ public class MainIntegratorTest {
         mockRepository();
         mockComments("do it", "Ok, working on 'do it'...");
         integrator.work();
+        verify(issueService, times(0)).createComment(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
+                Mockito.anyString());
         verifyZeroInteractions(executor);
     }
 
     @Test
     public void testWhenOneWasAlreadyExecutedWithDifferentParams() throws Exception {
+        final ScriptedRepository repo = mockRepository("do (it|that)");
         mockPullRequest();
-        mockRepository("do (it|that)");
         mockComments("do it", "Ok, working on 'do it'...", "Ok, working on 'do it'...", "do that");
         integrator.work();
+        verify(issueService).createComment(repo.getOwner(), repo.getName(), 1, "Ok, working on 'do that'...");
         verify(executor).execute("echo", asList("user", "repo", "feature/my-branch", "1", "that"));
     }
 

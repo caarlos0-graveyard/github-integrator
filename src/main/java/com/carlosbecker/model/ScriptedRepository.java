@@ -40,8 +40,11 @@ public class ScriptedRepository {
         return compile(format(REQUEST_REGEX, exp, PLEASE), CASE_INSENSITIVE);
     }
 
-    public String getReplyMessage() {
-        return format("%s%s%s", REPLY_START, regex, REPLY_END);
+    public String getReplyMessage(List<String> params) {
+        String message = regex;
+        for (final String param : params)
+            message = regex.replaceFirst("\\(.*\\)", param);
+        return format("%s%s%s", REPLY_START, message, REPLY_END);
     }
 
     public boolean isReply(String body) {

@@ -1,13 +1,12 @@
 package com.carlosbecker;
 
 import static org.mockito.MockitoAnnotations.initMocks;
-import java.util.concurrent.atomic.AtomicBoolean;
-import org.eclipse.egit.github.core.client.RequestException;
+import com.carlosbecker.github.IntegratorConfig;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import com.carlosbecker.github.IntegratorConfig;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AppTest {
     private App app;
@@ -42,10 +41,5 @@ public class AppTest {
     @Test(expected = NullPointerException.class)
     public void testMainMethodWithNullArgument() throws Exception {
         App.main(new String[] { null });
-    }
-
-    @Test(expected = RequestException.class)
-    public void testMainMethod() throws Exception {
-        App.main(new String[] { "./src/test/resources/main.test.properties" });
     }
 }

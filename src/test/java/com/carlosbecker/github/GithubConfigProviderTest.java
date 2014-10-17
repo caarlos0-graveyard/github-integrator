@@ -2,21 +2,30 @@ package com.carlosbecker.github;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import javax.inject.Inject;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+
 import com.carlosbecker.ConfigModule;
 import com.carlosbecker.TestPropertiesLoader;
 import com.carlosbecker.guice.GuiceModules;
 import com.carlosbecker.guice.GuiceTestRunner;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import javax.inject.Inject;
+
 @GuiceModules(ConfigModule.class)
 @RunWith(GuiceTestRunner.class)
 public class GithubConfigProviderTest {
     @BeforeClass
-    public static void before() throws Exception {
-        TestPropertiesLoader.load();
+    public static void init() throws Exception {
+        TestPropertiesLoader.init();
+    }
+
+    @AfterClass
+    public static void shutdown() {
+        TestPropertiesLoader.shutdown();
     }
 
     @Inject

@@ -3,10 +3,7 @@ package com.carlosbecker.github;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import javax.inject.Inject;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+
 import com.carlosbecker.GithubModule;
 import com.carlosbecker.TestPropertiesLoader;
 import com.carlosbecker.guice.GuiceModules;
@@ -14,12 +11,24 @@ import com.carlosbecker.guice.GuiceTestRunner;
 import com.carlosbecker.model.ScriptedRepositories;
 import com.carlosbecker.model.ScriptedRepository;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import javax.inject.Inject;
+
 @RunWith(GuiceTestRunner.class)
 @GuiceModules(GithubModule.class)
 public class RepositoriesProviderTest {
     @BeforeClass
-    public static void before() throws Exception {
-        TestPropertiesLoader.load();
+    public static void init() throws Exception {
+        TestPropertiesLoader.init();
+    }
+
+    @AfterClass
+    public static void shutdown() {
+        TestPropertiesLoader.shutdown();
     }
 
     @Inject
@@ -32,7 +41,7 @@ public class RepositoriesProviderTest {
 
     @Test
     public void testCorrectParsing() throws Exception {
-        ScriptedRepository repository = repositories.iterator().next();
+        final ScriptedRepository repository = repositories.iterator().next();
         assertThat(repository.getId().getOwner(), equalTo("caarlos0"));
         assertThat(repository.getId().getName(), equalTo("github-integrator"));
     }

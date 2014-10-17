@@ -1,4 +1,4 @@
-package com.carlosbecker;
+package com.carlosbecker.integration;
 
 public class TestPropertiesLoader {
     public static void init() {

@@ -5,9 +5,12 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+
+import com.carlosbecker.integration.IntegratorConfig;
 import com.carlosbecker.model.ScriptedRepositories;
 import com.carlosbecker.model.ScriptedRepositoriesProvider;
 

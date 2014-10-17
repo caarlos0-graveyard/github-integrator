@@ -1,4 +1,4 @@
-package com.carlosbecker.github;
+package com.carlosbecker.integration;
 
 import com.google.inject.Provider;
 

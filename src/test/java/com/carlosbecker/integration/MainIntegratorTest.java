@@ -1,4 +1,4 @@
-package com.carlosbecker;
+package com.carlosbecker.integration;
 
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
@@ -12,6 +12,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 import com.carlosbecker.integration.MainIntegrator;
+import com.carlosbecker.integration.PendencyService;
 import com.carlosbecker.model.ScriptedRepositories;
 import com.carlosbecker.model.ScriptedRepository;
 import com.carlosbecker.process.ProcessExecutor;
@@ -47,7 +48,7 @@ public class MainIntegratorTest {
     @Before
     public void init() {
         initMocks(this);
-        integrator = new MainIntegrator(prService, issueService, repositories, executor);
+        integrator = new MainIntegrator(prService, issueService, repositories, executor, new PendencyService());
     }
 
     @Test

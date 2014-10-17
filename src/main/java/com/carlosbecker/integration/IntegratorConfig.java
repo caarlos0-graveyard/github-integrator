@@ -1,4 +1,4 @@
-package com.carlosbecker.github;
+package com.carlosbecker.integration;
 
 import org.aeonbits.owner.Config;
 import org.aeonbits.owner.Config.Sources;

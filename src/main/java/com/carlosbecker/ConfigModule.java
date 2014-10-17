@@ -1,7 +1,7 @@
 package com.carlosbecker;
 
-import com.carlosbecker.github.IntegratorConfig;
-import com.carlosbecker.github.IntegratorConfigProvider;
+import com.carlosbecker.integration.IntegratorConfig;
+import com.carlosbecker.integration.IntegratorConfigProvider;
 import com.google.inject.AbstractModule;
 
 public class ConfigModule extends AbstractModule {

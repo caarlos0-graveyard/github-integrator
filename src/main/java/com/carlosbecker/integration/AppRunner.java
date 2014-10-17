@@ -1,21 +1,15 @@
 package com.carlosbecker.integration;
 
-import com.carlosbecker.github.IntegratorConfig;
-
 import javax.inject.Inject;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
 
 @Log4j
+@AllArgsConstructor(onConstructor = @__(@Inject))
 public class AppRunner {
     private final IntegratorConfig config;
     private final MainIntegrator integrator;
-
-    @Inject
-    public AppRunner(IntegratorConfig config, MainIntegrator integrator) {
-        this.config = config;
-        this.integrator = integrator;
-    }
 
     public void run() throws Exception {
         do {

@@ -10,7 +10,7 @@ Binds GitHub's PullRequests comments to shell executions.
 - You will have to create a `.json` file containing the executions configuration,
 like [this][executions];
 
-Right now, the applications passes the following parameters to the script:
+Right now, the application passes the following parameters down to the script:
 
 - `$1`: the pull request origin repository owner login (e.g.: caarlos0);
 - `$2`: the pull request origin repository name (e.g.: github-integrator);
@@ -18,11 +18,22 @@ Right now, the applications passes the following parameters to the script:
 - `$4`: the pull request number;
 - `$5` to `$n`: the group values from the regex expression.
 
+Scripts should be fast. If your script is slow, it will hold the execution of
+other commands until it ends. This will probably be fixed soon.
 
-You can execute the app like this:
+While we not have any stable realease, you will need to compile the project
+using Maven:
 
 ```shell
-INTEGRATOR_CONFIG=config.properties java -jar github-integrator-1.0-SNAPSHOT-jar-with-dependencies.jar
+mvn clean install
+```
+
+Than, you can execute the app like this:
+
+
+```shell
+INTEGRATOR_CONFIG=my.properties java -jar \
+  target/github-integrator-1.0-SNAPSHOT-jar-with-dependencies.jar
 ```
 
 [props]: /src/test/resources/test.properties
@@ -31,3 +42,7 @@ INTEGRATOR_CONFIG=config.properties java -jar github-integrator-1.0-SNAPSHOT-jar
 ## Throughput
 
 [![Throughput Graph](https://graphs.waffle.io/caarlos0/github-integrator/throughput.svg)](https://waffle.io/caarlos0/github-integrator/metrics)
+
+## Contributing
+
+Feel free to try to fix an existing issue or open new ones.

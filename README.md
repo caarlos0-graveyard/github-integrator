@@ -21,8 +21,8 @@ Right now, the applications passes the following parameters to the script:
 
 You can execute the app like this:
 
-```sh
-java -jar github-integrator.jar my.properties
+```shell
+INTEGRATOR_CONFIG=config.properties java -jar github-integrator-1.0-SNAPSHOT-jar-with-dependencies.jar
 ```
 
 [props]: /src/test/resources/test.properties

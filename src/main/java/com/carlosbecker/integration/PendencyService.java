@@ -25,20 +25,21 @@ public class PendencyService {
     private Map<List<String>, Long> getPendencies(ScriptedRepository repository, final Map<String, Long> comments) {
         final Map<List<String>, Long> pendencies = Maps.newHashMap();
         for (final Entry<String, Long> entry : comments.entrySet())
-            verifyPossiblePendency(entry.getKey(), pendencies, repository);
+            verifyPossiblePendency(entry, pendencies, repository);
         return pendencies.entrySet().stream()
                 .filter(entry -> entry.getValue() > 0)
                 .collect(toMap(entry -> entry.getKey(), entry -> entry.getValue()));
     }
 
-    private void verifyPossiblePendency(final String key, final Map<List<String>, Long> pendencies,
+    private void verifyPossiblePendency(final Entry<String, Long> entry, final Map<List<String>, Long> pendencies,
             ScriptedRepository repository) {
+        final String key = entry.getKey();
         if (repository.isAsk(key)) {
             final List<String> params = repository.getParams(key);
-            pendencies.put(params, pendencies.getOrDefault(params, 0L) + 1);
+            pendencies.put(params, pendencies.getOrDefault(params, 0L) + entry.getValue());
         } else if (repository.isReply(key)) {
             final List<String> params = repository.getReplyParams(key);
-            pendencies.put(params, pendencies.getOrDefault(params, 0L) - 1);
+            pendencies.put(params, pendencies.getOrDefault(params, 0L) - entry.getValue());
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.carlosbecker;
+package com.carlosbecker.integration;
 
 import com.carlosbecker.github.IntegratorConfig;
 

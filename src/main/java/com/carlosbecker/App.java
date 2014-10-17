@@ -1,6 +1,10 @@
 package com.carlosbecker;
 
 import static com.google.inject.Guice.createInjector;
+
+import com.carlosbecker.github.GithubModule;
+import com.carlosbecker.integration.AppRunner;
+
 import lombok.extern.log4j.Log4j;
 
 @Log4j

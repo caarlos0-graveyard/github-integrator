@@ -4,6 +4,8 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import com.carlosbecker.github.IntegratorConfig;
+import com.carlosbecker.integration.AppRunner;
+import com.carlosbecker.integration.MainIntegrator;
 
 import org.junit.Before;
 import org.junit.Test;

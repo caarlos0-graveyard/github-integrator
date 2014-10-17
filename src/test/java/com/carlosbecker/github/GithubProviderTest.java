@@ -3,7 +3,6 @@ package com.carlosbecker.github;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
-import com.carlosbecker.GithubModule;
 import com.carlosbecker.TestPropertiesLoader;
 import com.carlosbecker.guice.GuiceModules;
 import com.carlosbecker.guice.GuiceTestRunner;

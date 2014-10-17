@@ -1,6 +1,5 @@
-package com.carlosbecker;
+package com.carlosbecker.process;
 
-import com.carlosbecker.process.ProcessExecutor;
 import com.google.inject.AbstractModule;
 
 public class ProcessModule extends AbstractModule {

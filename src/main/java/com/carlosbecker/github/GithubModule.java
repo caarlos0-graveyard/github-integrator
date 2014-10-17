@@ -1,11 +1,10 @@
-package com.carlosbecker;
+package com.carlosbecker.github;
 
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.IssueService;
 import org.eclipse.egit.github.core.service.PullRequestService;
-import com.carlosbecker.github.GitHubClientProvider;
-import com.carlosbecker.github.IssueServiceProvider;
-import com.carlosbecker.github.PullRequestServiceProvider;
+
+import com.carlosbecker.ConfigModule;
 import com.carlosbecker.model.ScriptedRepositories;
 import com.carlosbecker.model.ScriptedRepositoriesProvider;
 import com.google.inject.AbstractModule;

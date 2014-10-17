@@ -17,6 +17,7 @@
 	<properties>
 		<java.version>1.8</java.version>
 		<coveralls.token>RIotj0dZgM09UsgaX5GT2BrI2NKmhERCg</coveralls.token>
+		<jacoco.minimum>1.00</jacoco.minimum>
 	</properties>
 
 	<dependencies>

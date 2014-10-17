@@ -105,6 +105,22 @@ public class MainIntegratorTest {
         verifyZeroInteractions(executor);
     }
 
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testModerateScenario() throws Exception {
+        mockPullRequest();
+        final ScriptedRepository repository = mockRepository("do (it|that)");
+        mockComments("do it", "do that", "Ok, working on 'do it'...", "Ok, working on 'do that'...", "do that again",
+                "do it", "nice", "+1", ":+1:");
+        final Map<List<String>, Long> comments = Maps.newHashMap();
+        comments.put(newArrayList("it"), 1L);
+        when(pendencyService.filter(eq(repository), any(List.class))).thenReturn(comments);
+
+        integrator.work();
+
+        verify(issueService).createComment(eq("user"), eq("repo"), eq(1), eq("Ok, working on 'do it'..."));
+    }
+
     @SuppressWarnings("unchecked")
     @Test(expected = RuntimeException.class)
     public void testCommentError() throws Exception {
@@ -119,8 +135,8 @@ public class MainIntegratorTest {
         integrator.work();
     }
 
-    @SuppressWarnings("unchecked")
     @Test
+    @SuppressWarnings("unchecked")
     public void testGithubParseError() throws Exception {
         final ScriptedRepository repo = mockRepository();
         when(prService.getPullRequests(eq(repo.getId()), eq("open"))).thenThrow(IOException.class);

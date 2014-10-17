@@ -11,11 +11,10 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
-import com.carlosbecker.integration.MainIntegrator;
-import com.carlosbecker.integration.PendencyService;
 import com.carlosbecker.model.ScriptedRepositories;
 import com.carlosbecker.model.ScriptedRepository;
 import com.carlosbecker.process.ProcessExecutor;
+import com.google.common.collect.Maps;
 
 import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
@@ -33,6 +32,7 @@ import org.mockito.Mockito;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class MainIntegratorTest {
     private MainIntegrator integrator;
@@ -44,11 +44,13 @@ public class MainIntegratorTest {
     private IssueService issueService;
     @Mock
     private PullRequestService prService;
+    @Mock
+    private PendencyService pendencyService;
 
     @Before
     public void init() {
         initMocks(this);
-        integrator = new MainIntegrator(prService, issueService, repositories, executor, new PendencyService());
+        integrator = new MainIntegrator(prService, issueService, repositories, executor, pendencyService);
     }
 
     @Test
@@ -93,16 +95,6 @@ public class MainIntegratorTest {
     }
 
     @Test
-    public void testMatchingComments() throws Exception {
-        mockPullRequest();
-        final ScriptedRepository repo = mockRepository();
-        mockComments("do it", "do IT");
-        integrator.work();
-        verify(issueService).createComment(repo.getOwner(), repo.getName(), 1, "Ok, working on 'do it'...");
-        verify(executor).execute("echo", asList("user", "repo", "feature/my-branch", "1"));
-    }
-
-    @Test
     public void testWhenOneWasAlreadyExecuted() throws Exception {
         mockPullRequest();
         mockRepository();
@@ -114,28 +106,37 @@ public class MainIntegratorTest {
     }
 
     @Test
-    public void testWhenOneWasAlreadyExecutedWithDifferentParams() throws Exception {
-        final ScriptedRepository repo = mockRepository("do (it|that)");
+    @SuppressWarnings("unchecked")
+    public void testModerateScenario() throws Exception {
         mockPullRequest();
-        mockComments("do it", "Ok, working on 'do it'...", "Ok, working on 'do it'...", "do that");
+        final ScriptedRepository repository = mockRepository("do (it|that)");
+        mockComments("do it", "do that", "Ok, working on 'do it'...", "Ok, working on 'do that'...", "do that again",
+                "do it", "nice", "+1", ":+1:");
+        final Map<List<String>, Long> comments = Maps.newHashMap();
+        comments.put(newArrayList("it"), 1L);
+        when(pendencyService.filter(eq(repository), any(List.class))).thenReturn(comments);
+
         integrator.work();
-        verify(issueService).createComment(repo.getOwner(), repo.getName(), 1, "Ok, working on 'do that'...");
-        verify(executor).execute("echo", asList("user", "repo", "feature/my-branch", "1", "that"));
+
+        verify(issueService).createComment(eq("user"), eq("repo"), eq(1), eq("Ok, working on 'do it'..."));
     }
 
     @SuppressWarnings("unchecked")
     @Test(expected = RuntimeException.class)
     public void testCommentError() throws Exception {
         mockPullRequest();
-        mockRepository();
+        final ScriptedRepository repository = mockRepository();
         mockComments("do it");
+        final Map<List<String>, Long> comments = Maps.newHashMap();
+        comments.put(newArrayList(), 1L);
+        when(pendencyService.filter(eq(repository), any(List.class))).thenReturn(comments);
         when(issueService.createComment(eq("user"), eq("repo"), eq(1), eq("Ok, working on 'do it'..."))).thenThrow(
                 IOException.class);
         integrator.work();
     }
 
-    @SuppressWarnings("unchecked")
     @Test
+    @SuppressWarnings("unchecked")
     public void testGithubParseError() throws Exception {
         final ScriptedRepository repo = mockRepository();
         when(prService.getPullRequests(eq(repo.getId()), eq("open"))).thenThrow(IOException.class);

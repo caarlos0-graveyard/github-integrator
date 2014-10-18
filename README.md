@@ -21,14 +21,14 @@ Right now, the application passes the following parameters down to the script:
 Scripts should be fast. If your script is slow, it will hold the execution of
 other commands until it ends. This will probably be fixed soon.
 
-While we not have any stable realease, you will need to compile the project
+While we don't have any stable release, you will need to compile the project
 using Maven:
 
 ```shell
 mvn clean install
 ```
 
-Than, you can execute the app like this:
+Then, you can execute the app like this:
 
 
 ```shell

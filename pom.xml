@@ -113,6 +113,9 @@
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+					<mutationThreshold>90</mutationThreshold>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

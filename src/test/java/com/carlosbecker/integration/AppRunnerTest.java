@@ -1,16 +1,15 @@
 package com.carlosbecker.integration;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-
-import com.carlosbecker.integration.AppRunner;
-import com.carlosbecker.integration.MainIntegrator;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class AppRunnerTest {
     private AppRunner app;
@@ -28,12 +27,14 @@ public class AppRunnerTest {
     @Test(timeout = 500)
     public void testRunOnce() throws Exception {
         app.run();
+        verify(integrator).work();
     }
 
     @Test(timeout = 500)
     public void testRunTwice() throws Exception {
-        final AtomicBoolean loop = new AtomicBoolean(true);
-        when(config.loop()).then(invocation -> loop.getAndSet(false));
+        final AtomicInteger loop = new AtomicInteger(0);
+        when(config.loop()).then(invocation -> loop.incrementAndGet() < 2);
         app.run();
+        verify(integrator, times(2)).work();
     }
 }

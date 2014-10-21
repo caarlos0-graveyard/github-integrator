@@ -20,6 +20,7 @@ public class AppRunner {
     private void runOnce() throws InterruptedException {
         log.info("Running...");
         integrator.work();
+        log.info("Waiting...");
         Thread.sleep(config.period() * 1000);
     }
 }

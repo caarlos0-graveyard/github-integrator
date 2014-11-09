@@ -27,7 +27,7 @@ import org.aeonbits.owner.Config;
 import org.aeonbits.owner.Config.Sources;
 
 /**
- * The integrator config
+ * The integrator config.
  * @author Carlos Alexandro Becker (caarlos0@gmail.com)
  * @version $Id$
  */
@@ -35,23 +35,27 @@ import org.aeonbits.owner.Config.Sources;
 public interface IntegratorConfig extends Config {
     /**
      * The oauth key.
+     * @return Github outh key.
      */
     @Key("github.oauth")
     String oauth();
 
     /**
      * The executions file path.
+     * @return The executions file path.
      */
     String executions();
 
     /**
      * The sleep time period. Defaults to 1min.
+     * @return The sleep period (in seconds).
      */
     @DefaultValue("60")
     int period();
 
     /**
      * Wether it should keep running. Defaults to true.
+     * @return True if it should loop.
      */
     @DefaultValue("true")
     boolean loop();

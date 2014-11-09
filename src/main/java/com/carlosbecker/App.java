@@ -26,8 +26,6 @@ package com.carlosbecker;
 import com.carlosbecker.github.GithubModule;
 import com.carlosbecker.integration.AppRunner;
 import com.google.inject.Guice;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j;
 
 /**
@@ -36,19 +34,25 @@ import lombok.extern.log4j.Log4j;
  * @version $Id$
  */
 @Log4j
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class App {
     /**
-     * Main
+     * Constructor.
+     */
+    private App() {
+        super();
+    }
+
+    /**
+     * Main.
      * @param args Params
      * @throws Exception If something goes wrong.
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(final String[] args) throws Exception {
         new App().run();
     }
 
     /**
-     * Main
+     * Main.
      * @throws Exception If something goes wrong.
      */
     private void run() throws Exception {
@@ -56,7 +60,7 @@ public final class App {
         Guice.createInjector(
             new ConfigModule(),
             new GithubModule()
-        ).getInstance(AppRunner.class).run();
+            ).getInstance(AppRunner.class).run();
     }
 
 }

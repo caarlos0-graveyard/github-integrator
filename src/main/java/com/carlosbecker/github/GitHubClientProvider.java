@@ -43,7 +43,7 @@ public class GitHubClientProvider implements Provider<GitHubClient> {
     private transient IntegratorConfig config;
 
     @Override
-    public GitHubClient get() {
+    public final GitHubClient get() {
         final GitHubClient client = new GitHubClient();
         client.setOAuth2Token(this.config.oauth());
         return client;

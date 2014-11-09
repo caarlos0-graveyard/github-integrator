@@ -39,9 +39,21 @@ import org.eclipse.egit.github.core.RepositoryId;
  */
 @RequiredArgsConstructor
 public class ScriptedRepository {
+    /**
+     * Please optional suffix regex.
+     */
     private static final String PLEASE = "(,? please)?";
+    /**
+     * Request regex
+     */
     private static final String REQUEST_REGEX = "^%s%s([^a-zA-Z0-9\\s]*)?$";
+    /**
+     * Default reply start.
+     */
     public static final String REPLY_START = "Ok, working on '";
+    /**
+     * Default reply end.
+     */
     public static final String REPLY_END = "'...";
     /**
      * The repository owner
@@ -67,8 +79,8 @@ public class ScriptedRepository {
      * Builds an repository id for this scripted repository
      * @return A RepositoryId representing this repository
      */
-    public RepositoryId getId() {
-        return new RepositoryId(owner, name);
+    public final RepositoryId getId() {
+        return new RepositoryId(this.owner, this.name);
     }
 
     /**
@@ -78,10 +90,20 @@ public class ScriptedRepository {
      * @return True if this repository should process this comment, false
      *         otherwise
      */
-    public boolean isAsk(final String body) {
-        return pattern()
+    public final boolean isAsk(final String body) {
+        return this.pattern()
             .matcher(body)
             .matches();
+    }
+
+    /**
+     * Checks wether the given comment is replying something from this
+     * Scripted Repository
+     * @param body Comment body
+     * @return True if this repository processed this comment, false otherwise
+     */
+    public final boolean isReply(final String body) {
+        return this.isAsk(this.extractOriginalAsk(body));
     }
 
     /**
@@ -90,7 +112,7 @@ public class ScriptedRepository {
      */
     private Pattern pattern() {
         return Pattern.compile(
-            String.format(REQUEST_REGEX, regex, PLEASE),
+            String.format(REQUEST_REGEX, this.regex, PLEASE),
             Pattern.CASE_INSENSITIVE
             );
     }
@@ -106,16 +128,6 @@ public class ScriptedRepository {
             message = regex.replaceFirst("\\(.*\\)", param);
         }
         return String.format("%s%s%s", REPLY_START, message, REPLY_END);
-    }
-
-    /**
-     * Checks wether the given comment is replying something from this
-     * Scripted Repository
-     * @param body Comment body
-     * @return True if this repository processed this comment, false otherwise
-     */
-    public boolean isReply(final String body) {
-        return isAsk(extractOriginalAsk(body));
     }
 
     /**
@@ -135,7 +147,7 @@ public class ScriptedRepository {
      * @return List of parameters
      */
     public List<String> getReplyParams(final String body) {
-        return getParams(extractOriginalAsk(body));
+        return this.getParams(this.extractOriginalAsk(body));
     }
 
     /**
@@ -144,17 +156,18 @@ public class ScriptedRepository {
      * @return List of parameters
      */
     public List<String> getParams(final String body) {
-        if (Strings.isNullOrEmpty(body) || !isAsk(body))
+        if (Strings.isNullOrEmpty(body) || !this.isAsk(body)) {
             return Lists.newArrayList();
-        return buildParamList(body);
+        }
+        return this.buildParamList(body);
     }
 
     private List<String> buildParamList(final String body) {
         final List<String> params = Lists.newArrayList();
-        final Matcher matcher = pattern().matcher(body);
+        final Matcher matcher = this.pattern().matcher(body);
         matcher.matches();
         for (int groupIdx = 1; groupIdx <= matcher.groupCount(); groupIdx++) {
-            if (isValidParam(matcher.group(groupIdx))) {
+            if (this.isValidParam(matcher.group(groupIdx))) {
                 params.add(matcher.group(groupIdx));
             }
         }

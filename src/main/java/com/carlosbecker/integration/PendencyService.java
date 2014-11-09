@@ -45,8 +45,8 @@ public class PendencyService {
      * @param comments Comments
      * @return A map of pendencies ready to be processed
      */
-    public Map<List<String>, Long> filter(ScriptedRepository repository,
-        List<Comment> comments) {
+    public Map<List<String>, Long> filter(
+        final ScriptedRepository repository, final List<Comment> comments) {
         final Map<String, Long> reducedComments = comments
             .stream()
             .map(comment -> comment.getBody())
@@ -56,7 +56,7 @@ public class PendencyService {
                     Collectors.counting()
                     )
                 );
-        return getPendencies(repository, reducedComments);
+        return this.getPendencies(repository, reducedComments);
     }
 
     /**
@@ -66,10 +66,10 @@ public class PendencyService {
      * @return Filtered list of comments
      */
     private Map<List<String>, Long> getPendencies(
-        ScriptedRepository repository, final Map<String, Long> comments) {
+        final ScriptedRepository repository, final Map<String, Long> comments) {
         final Map<List<String>, Long> pendencies = Maps.newHashMap();
         for (final Entry<String, Long> entry : comments.entrySet()) {
-            verifyPossiblePendency(entry, pendencies, repository);
+            this.verifyPossiblePendency(entry, pendencies, repository);
         }
         return pendencies.entrySet()
             .stream()
@@ -90,7 +90,7 @@ public class PendencyService {
      */
     private void verifyPossiblePendency(final Entry<String, Long> entry,
         final Map<List<String>, Long> pendencies,
-        ScriptedRepository repository) {
+        final ScriptedRepository repository) {
         final String key = entry.getKey();
         if (repository.isAsk(key)) {
             final List<String> params = repository.getParams(key);

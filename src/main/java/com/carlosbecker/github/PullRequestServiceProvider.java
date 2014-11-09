@@ -35,14 +35,15 @@ import org.eclipse.egit.github.core.service.PullRequestService;
  * @version $Id$
  */
 @AllArgsConstructor(onConstructor = @__(@Inject))
-public class PullRequestServiceProvider implements Provider<PullRequestService> {
+public class PullRequestServiceProvider
+    implements Provider<PullRequestService> {
     /**
      * Client.
      */
     private transient GitHubClient client;
 
     @Override
-    public PullRequestService get() {
-        return new PullRequestService(client);
+    public final PullRequestService get() {
+        return new PullRequestService(this.client);
     }
 }

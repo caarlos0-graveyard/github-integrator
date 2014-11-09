@@ -39,7 +39,8 @@ public class ProcessExecutor {
      * @param params Parameters to pass down to the script
      * @throws IOException If something goes wrong
      */
-    public void execute(String script, List<String> params) throws IOException {
+    public void execute(final String script, final List<String> params)
+        throws IOException {
         final List<String> cmd = Lists.newArrayList();
         cmd.add(script);
         cmd.addAll(params);

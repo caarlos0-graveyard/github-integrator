@@ -39,14 +39,12 @@ import org.eclipse.egit.github.core.service.PullRequestService;
  */
 public class GithubModule extends AbstractModule {
     @Override
-    protected void configure() {
+    protected final void configure() {
         install(new ConfigModule());
-
         bind(GitHubClient.class).toProvider(GitHubClientProvider.class);
         bind(PullRequestService.class)
             .toProvider(PullRequestServiceProvider.class);
         bind(IssueService.class).toProvider(IssueServiceProvider.class);
-
         bind(ScriptedRepositories.class)
             .toProvider(ScriptedRepositoriesProvider.class);
     }

@@ -23,8 +23,8 @@
  */
 package com.carlosbecker.model;
 
-import static com.google.common.collect.Lists.newArrayList;
 import com.carlosbecker.integration.IntegratorConfig;
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Provider;
@@ -57,22 +57,23 @@ Provider<ScriptedRepositories> {
     private final transient IntegratorConfig config;
 
     @Override
-    public ScriptedRepositories get() {
-        if (config.executions() == null)
-            return new ScriptedRepositories(newArrayList());
-        return parse();
+    public final ScriptedRepositories get() {
+        if (this.config.executions() == null) {
+            return new ScriptedRepositories(Lists.newArrayList());
+        }
+        return this.parse();
     }
 
     /**
      * Parse the executions file to a ScriptedRepositories instance.
      * @return ScriptedRepositories instance.
      */
-    private ScriptedRepositories parse() {
+    private final ScriptedRepositories parse() {
         try {
             final Gson gson = new Gson();
             return new ScriptedRepositories(gson.fromJson(loadFile(), TYPE));
         } catch (final FileNotFoundException e) {
-            return new ScriptedRepositories(newArrayList());
+            return new ScriptedRepositories(Lists.newArrayList());
         }
     }
 
@@ -81,8 +82,8 @@ Provider<ScriptedRepositories> {
      * @return The BufferedReader of the file.
      * @throws FileNotFoundException If the file doesn't exists.
      */
-    private BufferedReader loadFile() throws FileNotFoundException {
-        final File file = new File(config.executions());
+    private final BufferedReader loadFile() throws FileNotFoundException {
+        final File file = new File(this.config.executions());
         final FileInputStream inputStream = new FileInputStream(file);
         return new BufferedReader(new InputStreamReader(inputStream));
     }

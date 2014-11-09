@@ -39,6 +39,7 @@ import com.carlosbecker.process.ProcessExecutor;
 import com.google.common.collect.Maps;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import org.eclipse.egit.github.core.Comment;
@@ -190,10 +191,14 @@ public class MainIntegratorTest {
     }
 
     private ScriptedRepository mockRepository(String regex) {
-        final ScriptedRepository repository = new ScriptedRepository("user",
-            "repo", regex, "echo");
-        when(repositories.iterator()).thenReturn(
-            asList(repository).iterator());
+        final ScriptedRepository repository = new ScriptedRepository(
+            "user",
+            "repo",
+            regex,
+            "echo"
+            );
+        Mockito.when(repositories.iterator())
+            .thenReturn(Arrays.asList(repository).iterator());
         return repository;
     }
 

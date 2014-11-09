@@ -28,7 +28,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
 
 /**
- * The App Runner
+ * The App Runner.
  *
  * @author Carlos Alexandro Becker (caarlos0@gmail.com)
  * @version $Id$
@@ -36,6 +36,7 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 @AllArgsConstructor(onConstructor = @__(@Inject))
 public class AppRunner {
+    private static final int SECOND = 1000;
     /**
      * Config.
      */
@@ -51,9 +52,9 @@ public class AppRunner {
      */
     public void run() throws Exception {
         do {
-            runOnce();
-            sleep();
-        } while (config.loop());
+            this.runOnce();
+            this.sleep();
+        } while (this.config.loop());
     }
 
     /**
@@ -61,9 +62,9 @@ public class AppRunner {
      * @throws InterruptedException If fails at sleep.
      */
     private void sleep() throws InterruptedException {
-        if (config.loop()) {
+        if (this.config.loop()) {
             log.info("Waiting...");
-            Thread.sleep(config.period() * 1000);
+            Thread.sleep(this.config.period() * SECOND);
         }
     }
 
@@ -72,6 +73,6 @@ public class AppRunner {
      */
     private void runOnce() {
         log.info("Running...");
-        integrator.work();
+        this.integrator.work();
     }
 }

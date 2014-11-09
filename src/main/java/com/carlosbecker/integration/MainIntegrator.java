@@ -23,10 +23,10 @@
  */
 package com.carlosbecker.integration;
 
-import static com.google.common.collect.Lists.newArrayList;
 import com.carlosbecker.model.ScriptedRepositories;
 import com.carlosbecker.model.ScriptedRepository;
 import com.carlosbecker.process.ProcessExecutor;
+import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -79,7 +79,7 @@ public class MainIntegrator {
     public void work() {
         final Iterator<ScriptedRepository> iterator = repositories.iterator();
         while (iterator.hasNext()) {
-            tryToWork(iterator.next());
+            this.tryToWork(iterator.next());
         }
     }
 
@@ -89,7 +89,7 @@ public class MainIntegrator {
      */
     private void tryToWork(final ScriptedRepository repository) {
         try {
-            work(repository);
+            this.work(repository);
         } catch (final IOException exception) {
             final RepositoryId id = repository.getId();
             final String msg = String.format(PROCESS_FAIL_MSG, id);
@@ -102,7 +102,7 @@ public class MainIntegrator {
      * @param repository Repository to work on.
      * @throws IOException If can't connect.
      */
-    private void work(ScriptedRepository repository) throws IOException {
+    private void work(final ScriptedRepository repository) throws IOException {
         final List<PullRequest> prlist = prService.getPullRequests(
             repository.getId(),
             "open"
@@ -114,7 +114,7 @@ public class MainIntegrator {
             );
         log.info(msg);
         for (final PullRequest pr : prlist) {
-            process(repository, pr);
+            this.process(repository, pr);
         }
     }
 
@@ -124,16 +124,16 @@ public class MainIntegrator {
      * @param pr Pull Request
      * @throws IOException If can't connect.
      */
-    private void process(ScriptedRepository repository, PullRequest pr)
-        throws IOException {
+    private void process(final ScriptedRepository repository,
+        final PullRequest pr) throws IOException {
         final List<Comment> comments = issueService.getComments(
             repository.getId(),
             pr.getNumber()
             );
-        pendencyService
+        this.pendencyService
         .filter(repository, comments)
         .entrySet()
-        .forEach(entry -> processPendency(repository, pr, entry));
+        .forEach(entry -> this.processPendency(repository, pr, entry));
     }
 
     /**
@@ -142,10 +142,10 @@ public class MainIntegrator {
      * @param pr Pull Request
      * @param entry Pendency to be processed.
      */
-    private void processPendency(ScriptedRepository repository, PullRequest pr,
-        Entry<List<String>, Long> entry) {
+    private void processPendency(final ScriptedRepository repository,
+        final PullRequest pr, final Entry<List<String>, Long> entry) {
         try {
-            work(repository, pr, entry.getKey());
+            this.work(repository, pr, entry.getKey());
         } catch (final IOException e) {
             throw new RuntimeException(e);
         }
@@ -158,16 +158,20 @@ public class MainIntegrator {
      * @param params Params.
      * @throws IOException If fails to connect
      */
-    private void work(ScriptedRepository repository, PullRequest pr,
-        List<String> params) throws IOException {
+    private void work(final ScriptedRepository repository,
+        final PullRequest pr,
+        final List<String> params) throws IOException {
         log.info("Running " + repository.getScript() + "...");
-        issueService.createComment(
+        this.issueService.createComment(
             repository.getOwner(),
             repository.getName(),
             pr.getNumber(),
             repository.getReplyMessage(params)
             );
-        executor.execute(repository.getScript(), buildParamList(pr, params));
+        this.executor.execute(
+            repository.getScript(),
+            buildParamList(pr, params)
+            );
     }
 
     /**
@@ -176,10 +180,11 @@ public class MainIntegrator {
      * @param params Params to append on
      * @return A list of params
      */
-    private List<String> buildParamList(PullRequest pr, List<String> params) {
+    private List<String> buildParamList(final PullRequest pr,
+        final List<String> params) {
         final PullRequestMarker head = pr.getHead();
         final Repository headRepo = head.getRepo();
-        final List<String> parsedParams = newArrayList();
+        final List<String> parsedParams = Lists.newArrayList();
         parsedParams.addAll(
             Arrays.asList(
                 headRepo.getOwner().getLogin(),

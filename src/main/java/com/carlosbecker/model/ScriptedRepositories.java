@@ -45,14 +45,14 @@ public class ScriptedRepositories {
      * @return Scripted Repositories Iterator.
      */
     public Iterator<ScriptedRepository> iterator() {
-        return repositories.iterator();
+        return this.repositories.iterator();
     }
 
     /**
      * Checks wether the repository list is empty.
      * @return True if empty, false otherwise.
      */
-    public boolean isEmpty() {
-        return repositories.isEmpty();
+    public final boolean isEmpty() {
+        return this.repositories.isEmpty();
     }
 }

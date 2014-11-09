@@ -42,7 +42,7 @@ public class IssueServiceProvider implements Provider<IssueService> {
     private transient GitHubClient client;
 
     @Override
-    public IssueService get() {
-        return new IssueService(client);
+    public final IssueService get() {
+        return new IssueService(this.client);
     }
 }

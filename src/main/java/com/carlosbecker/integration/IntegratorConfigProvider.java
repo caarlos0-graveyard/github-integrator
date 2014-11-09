@@ -33,7 +33,7 @@ import org.aeonbits.owner.ConfigFactory;
  */
 public class IntegratorConfigProvider implements Provider<IntegratorConfig> {
     @Override
-    public IntegratorConfig get() {
+    public final IntegratorConfig get() {
         return ConfigFactory.create(IntegratorConfig.class);
     }
 }

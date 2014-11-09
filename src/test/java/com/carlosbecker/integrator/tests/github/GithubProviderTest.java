@@ -23,29 +23,44 @@
  */
 package com.carlosbecker.integrator.tests.github;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
 import com.carlosbecker.guice.GuiceModules;
 import com.carlosbecker.guice.GuiceTestRunner;
 import com.carlosbecker.integrator.github.GithubModule;
-import com.carlosbecker.integrator.tests.integration.TestPropertiesLoader;
+import com.carlosbecker.integrator.tests.ConfigLoader;
 import javax.inject.Inject;
 import org.eclipse.egit.github.core.client.GitHubClient;
+import org.hamcrest.CoreMatchers;
+import org.junit.Assert;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+/**
+ * Github Client provider tests.
+ * @author Carlos Alexandro Becker (caarlos0@gmail.com)
+ * @version $Id$
+ */
 @GuiceModules(GithubModule.class)
 @RunWith(GuiceTestRunner.class)
 public class GithubProviderTest {
+    /**
+     * Rule.
+     */
     @ClassRule
-    public static TestPropertiesLoader cfgLoader = new TestPropertiesLoader();
+    public static ConfigLoader cfgLoader = new ConfigLoader();
 
+    /**
+     * Client.
+     */
     @Inject
-    private GitHubClient client;
+    private transient GitHubClient client;
 
+    /**
+     * Test provided.
+     * @throws Exception If something goes wrong.
+     */
     @Test
-    public void testProvided() throws Exception {
-        assertThat(client, notNullValue());
+    public final void testProvided() throws Exception {
+        Assert.assertThat(this.client, CoreMatchers.notNullValue());
     }
 }

@@ -23,25 +23,40 @@
  */
 package com.carlosbecker.integrator.tests.github;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
 import com.carlosbecker.guice.GuiceModules;
 import com.carlosbecker.guice.GuiceTestRunner;
 import com.carlosbecker.integrator.github.GithubModule;
 import javax.inject.Inject;
 import org.eclipse.egit.github.core.service.IssueService;
+import org.hamcrest.CoreMatchers;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+/**
+ * Issue service provider tests.
+ * @author Carlos Alexandro Becker (caarlos0@gmail.com)
+ * @version $Id$
+ */
 @RunWith(GuiceTestRunner.class)
 @GuiceModules(GithubModule.class)
 public class IssuerServiceProviderTest {
+    /**
+     * Service.
+     */
     @Inject
-    private IssueService service;
+    private transient IssueService service;
 
+    /**
+     * Test provided.
+     * @throws Exception If something goes wrong.
+     */
     @Test
-    public void testProvided() throws Exception {
-        assertThat(service, notNullValue());
-        assertThat(service.getClient(), notNullValue());
+    public final void testProvided() throws Exception {
+        Assert.assertThat(this.service, CoreMatchers.notNullValue());
+        Assert.assertThat(
+            this.service.getClient(),
+            CoreMatchers.notNullValue()
+            );
     }
 }

@@ -23,52 +23,64 @@
  */
 package com.carlosbecker.integrator.tests.github;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 import com.carlosbecker.integrator.integration.IntegratorConfig;
 import com.carlosbecker.integrator.model.ScriptedRepositories;
 import com.carlosbecker.integrator.model.ScriptedRepositoriesProvider;
+import org.hamcrest.CoreMatchers;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
+/**
+ * Scripted Repositories Provider tests.
+ * @author Carlos Alexandro Becker (caarlos0@gmail.com)
+ * @version $Id$
+ */
 public class ScriptedRepositoriesProviderMapperTest {
-    private ScriptedRepositoriesProvider provider;
-
+    /**
+     * Provider.
+     */
+    private transient ScriptedRepositoriesProvider provider;
+    /**
+     * Mock.
+     */
     @Mock
-    private IntegratorConfig config;
+    private transient IntegratorConfig config;
 
+    /**
+     * Tear up.
+     */
     @Before
-    public void init() {
-        initMocks(this);
-        provider = new ScriptedRepositoriesProvider(config);
+    public final void init() {
+        MockitoAnnotations.initMocks(this);
+        this.provider = new ScriptedRepositoriesProvider(this.config);
     }
 
     @Test
-    public void nullInput() throws Exception {
-        when(config.executions()).thenReturn(null);
-        ScriptedRepositories repositories = provider.get();
-        assertThat(repositories, notNullValue());
-        assertThat(repositories.isEmpty(), equalTo(true));
+    public final void nullInput() throws Exception {
+        Mockito.when(this.config.executions()).thenReturn(null);
+        final ScriptedRepositories repositories = this.provider.get();
+        Assert.assertThat(repositories, CoreMatchers.notNullValue());
+        Assert.assertThat(repositories.isEmpty(), CoreMatchers.equalTo(true));
     }
 
     @Test
     public void testEmptyInput() throws Exception {
-        when(config.executions()).thenReturn(" ");
-        ScriptedRepositories repositories = provider.get();
-        assertThat(repositories, notNullValue());
-        assertThat(repositories.isEmpty(), equalTo(true));
+        Mockito.when(this.config.executions()).thenReturn(" ");
+        final ScriptedRepositories repositories = this.provider.get();
+        Assert.assertThat(repositories, CoreMatchers.notNullValue());
+        Assert.assertThat(repositories.isEmpty(), CoreMatchers.equalTo(true));
     }
 
     @Test
     public void testValidInput() throws Exception {
-        when(config.executions()).thenReturn(
-            "./src/test/resources/test.executions.json");
-        ScriptedRepositories repositories = provider.get();
-        assertThat(repositories, notNullValue());
-        assertThat(repositories.isEmpty(), equalTo(false));
+        Mockito.when(this.config.executions())
+        .thenReturn("./src/test/resources/test.executions.json");
+        final ScriptedRepositories repositories = this.provider.get();
+        Assert.assertThat(repositories, CoreMatchers.notNullValue());
+        Assert.assertThat(repositories.isEmpty(), CoreMatchers.equalTo(false));
     }
 }

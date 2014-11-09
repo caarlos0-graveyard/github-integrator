@@ -23,44 +23,74 @@
  */
 package com.carlosbecker.integrator.tests.github;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
 import com.carlosbecker.guice.GuiceModules;
 import com.carlosbecker.guice.GuiceTestRunner;
 import com.carlosbecker.integrator.ConfigModule;
 import com.carlosbecker.integrator.integration.IntegratorConfig;
-import com.carlosbecker.integrator.tests.integration.TestPropertiesLoader;
+import com.carlosbecker.integrator.tests.ConfigLoader;
 import javax.inject.Inject;
+import org.hamcrest.CoreMatchers;
+import org.junit.Assert;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+/**
+ * Github config provider tests.
+ * @author Carlos Alexandro Becker (caarlos0@gmail.com)
+ * @version $Id$
+ */
 @GuiceModules(ConfigModule.class)
 @RunWith(GuiceTestRunner.class)
 public class GithubConfigProviderTest {
+    /**
+     * Rule.
+     */
     @ClassRule
-    public static TestPropertiesLoader cfgLoader = new TestPropertiesLoader();
+    public static ConfigLoader cfgLoader = new ConfigLoader();
 
+    /**
+     * Config.
+     */
     @Inject
-    private IntegratorConfig config;
+    private transient IntegratorConfig config;
 
+    /**
+     * Basic test.
+     * @throws Exception If something goes wrong.
+     */
     @Test
-    public void testConfigProvided() throws Exception {
-        assertThat(config, notNullValue());
+    public final void testConfigProvided() throws Exception {
+        Assert.assertThat(this.config, CoreMatchers.notNullValue());
     }
 
+    /**
+     * Test oauth.
+     * @throws Exception If something goes wrong.
+     */
     @Test
-    public void testOauth() throws Exception {
-        assertThat(config.oauth(), notNullValue());
+    public final void testOauth() throws Exception {
+        Assert.assertThat(this.config.oauth(), CoreMatchers.notNullValue());
     }
 
+    /**
+     * Test executions.
+     * @throws Exception If something goes wrong.
+     */
     @Test
-    public void testExecutions() throws Exception {
-        assertThat(config.executions(), notNullValue());
+    public final void testExecutions() throws Exception {
+        Assert.assertThat(
+            this.config.executions(),
+            CoreMatchers.notNullValue()
+            );
     }
 
+    /**
+     * Test period.
+     * @throws Exception If something goes wrong.
+     */
     @Test
-    public void testPeriod() throws Exception {
-        assertThat(config.period(), notNullValue());
+    public final void testPeriod() throws Exception {
+        Assert.assertThat(this.config.period(), CoreMatchers.notNullValue());
     }
 }

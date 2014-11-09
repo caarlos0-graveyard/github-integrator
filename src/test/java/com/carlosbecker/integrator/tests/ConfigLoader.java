@@ -21,19 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.carlosbecker.integrator.tests.integration;
+package com.carlosbecker.integrator.tests;
 
 import lombok.RequiredArgsConstructor;
 import org.junit.rules.ExternalResource;
 
 /**
- * Rule that loads up the INTEGRATOR_CONFIG file for tests.
+ * ClassRule that loads up the INTEGRATOR_CONFIG file for tests.
  *
  * @author Carlos Alexandro Becker (caarlos0@gmail.com)
  * @version $Id$
  */
 @RequiredArgsConstructor
-public class TestPropertiesLoader extends ExternalResource {
+public class ConfigLoader extends ExternalResource {
     /**
      * Path to integrator config file
      */
@@ -42,18 +42,17 @@ public class TestPropertiesLoader extends ExternalResource {
     /**
      * Constructor with the default test.properties
      */
-    public TestPropertiesLoader() {
+    public ConfigLoader() {
         this("./src/test/resources/test.properties");
     }
 
     @Override
-    protected void before() throws Throwable {
-        System.out.println("OI");
+    protected final void before() throws Throwable {
         System.setProperty("INTEGRATOR_CONFIG", config);
     }
 
     @Override
-    protected void after() {
+    protected final void after() {
         System.clearProperty("INTEGRATOR_CONFIG");
     }
 }

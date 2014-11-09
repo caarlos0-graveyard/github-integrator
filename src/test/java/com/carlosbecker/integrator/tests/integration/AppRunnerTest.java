@@ -23,10 +23,6 @@
  */
 package com.carlosbecker.integrator.tests.integration;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
-import static org.mockito.internal.verification.VerificationModeFactory.times;
 import com.carlosbecker.integrator.integration.AppRunner;
 import com.carlosbecker.integrator.integration.IntegratorConfig;
 import com.carlosbecker.integrator.integration.MainIntegrator;
@@ -34,31 +30,53 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.mockito.internal.verification.VerificationModeFactory;
 
+/**
+ * App Runner tests.
+ * @author Carlos Alexandro Becker (caarlos0@gmail.com)
+ * @version $Id$
+ */
 public class AppRunnerTest {
-    private AppRunner app;
+    /**
+     * Mock.
+     */
     @Mock
-    private IntegratorConfig config;
+    private transient IntegratorConfig config;
+    /**
+     * Mock.
+     */
     @Mock
-    private MainIntegrator integrator;
+    private transient MainIntegrator integrator;
+    /**
+     * Runner.
+     */
+    private transient AppRunner app;
 
+    /**
+     * Tear up.
+     */
     @Before
-    public void init() {
-        initMocks(this);
-        app = new AppRunner(config, integrator);
+    public final void init() {
+        MockitoAnnotations.initMocks(this);
+        this.app = new AppRunner(this.config, this.integrator);
     }
 
     @Test(timeout = 500)
-    public void testRunOnce() throws Exception {
-        app.run();
-        verify(integrator).work();
+    public final void testRunOnce() throws Exception {
+        this.app.run();
+        Mockito.verify(this.integrator).work();
     }
 
     @Test(timeout = 500)
-    public void testRunTwice() throws Exception {
+    public final void testRunTwice() throws Exception {
         final AtomicInteger loop = new AtomicInteger(0);
-        when(config.loop()).then(invocation -> loop.incrementAndGet() < 3);
-        app.run();
-        verify(integrator, times(2)).work();
+        Mockito.when(this.config.loop())
+        .then(invocation -> loop.incrementAndGet() < 3);
+        this.app.run();
+        Mockito.verify(this.integrator, VerificationModeFactory.times(2))
+        .work();
     }
 }

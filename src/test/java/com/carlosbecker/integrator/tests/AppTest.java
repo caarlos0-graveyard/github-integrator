@@ -24,7 +24,6 @@
 package com.carlosbecker.integrator.tests;
 
 import com.carlosbecker.integrator.App;
-import com.carlosbecker.integrator.tests.integration.TestPropertiesLoader;
 import org.junit.ClassRule;
 import org.junit.Test;
 
@@ -32,7 +31,7 @@ public class AppTest {
     private static final String CFG = "./src/test/resources/main.test.properties";
 
     @ClassRule
-    public static TestPropertiesLoader cfg = new TestPropertiesLoader(CFG);
+    public static ConfigLoader cfg = new ConfigLoader(CFG);
 
     @Test
     public void testStaticCall() throws Exception {

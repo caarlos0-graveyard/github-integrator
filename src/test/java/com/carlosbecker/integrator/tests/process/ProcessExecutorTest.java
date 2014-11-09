@@ -23,24 +23,39 @@
  */
 package com.carlosbecker.integrator.tests.process;
 
-import static java.util.Arrays.asList;
 import com.carlosbecker.integrator.process.ProcessExecutor;
+import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * Tests for the process executor class.
+ * @author Carlos Alexandro Becker (caarlos0@gmail.com)
+ * @version $Id$
+ */
 public class ProcessExecutorTest {
+    /**
+     * Executor
+     */
+    private transient ProcessExecutor executor;
 
-    private ProcessExecutor executor;
-
+    /**
+     * Tear up.
+     */
     @Before
     public void init() {
         this.executor = new ProcessExecutor();
     }
 
+    /**
+     * Run something.
+     * @throws Exception If something goes wrong.
+     */
     @Test
-    public void testName() throws Exception {
-        executor.execute("./src/test/resources/sample.sh", asList("user",
-            "repo", "whatever"));
+    public void testItWorks() throws Exception {
+        this.executor.execute(
+            "./src/test/resources/sample.sh",
+            Arrays.asList("user", "repo", "whatever")
+            );
     }
-
 }

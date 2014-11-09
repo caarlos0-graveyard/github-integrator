@@ -23,110 +23,204 @@
  */
 package com.carlosbecker.integrator.tests.integration;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static java.util.stream.Collectors.toList;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
 import com.carlosbecker.integrator.integration.PendencyService;
 import com.carlosbecker.integrator.model.ScriptedRepository;
+import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.eclipse.egit.github.core.Comment;
+import org.hamcrest.CoreMatchers;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * Tests for the pendency service.
+ * @author Carlos Alexandro Becker (caarlos0@gmail.com)
+ * @version $Id$
+ */
 public class PendencyServiceTest {
+    /**
+     * Service.
+     */
     private PendencyService service;
 
+    /**
+     * Tear up.
+     */
     @Before
     public void init() {
         service = new PendencyService();
     }
 
+    /**
+     * Test empty comment list.
+     * @throws Exception If something goes wrong.
+     */
     @Test
     public void testNoComments() throws Exception {
         final Map<List<String>, Long> pendencies = service.filter(
             new ScriptedRepository("", "", "", ""),
-            newArrayList());
-        assertThat(pendencies.size(), equalTo(0));
+            Lists.newArrayList()
+            );
+        Assert.assertThat(pendencies.size(), CoreMatchers.equalTo(0));
     }
 
+    /**
+     * Test non matching comment list.
+     * @throws Exception If something goes wrong.
+     */
     @Test
     public void testNonMatchingComments() throws Exception {
         final Map<List<String>, Long> pendencies = service.filter(
             new ScriptedRepository("", "", "do this", ""),
-            commentList("do whatever"));
-        assertThat(pendencies.size(), equalTo(0));
+            this.commentList("do whatever")
+            );
+        Assert.assertThat(pendencies.size(), CoreMatchers.equalTo(0));
     }
 
+    /**
+     * Test one comment.
+     * @throws Exception If something goes wrong.
+     */
     @Test
-    public void testOneComments() throws Exception {
+    public void testOneComment() throws Exception {
         final Map<List<String>, Long> pendencies = service.filter(
             new ScriptedRepository("", "", "do this", ""),
-            commentList("do this"));
-        assertThat(pendencies.size(), equalTo(1));
-        assertThat(pendencies.get(newArrayList()), equalTo(1L));
+            this.commentList("do this")
+            );
+        Assert.assertThat(pendencies.size(), CoreMatchers.equalTo(1));
+        Assert.assertThat(
+            pendencies.get(Lists.newArrayList()),
+            CoreMatchers.equalTo(1L)
+            );
     }
 
+    /**
+     * Test two comment.
+     * @throws Exception If something goes wrong.
+     */
     @Test
     public void testTwoComments() throws Exception {
         final Map<List<String>, Long> pendencies = service.filter(
             new ScriptedRepository("", "", "do this", ""),
-            commentList("do this", "do this"));
-        assertThat(pendencies.size(), equalTo(1));
-        assertThat(pendencies.get(newArrayList()), equalTo(2L));
+            this.commentList("do this", "do this")
+            );
+        Assert.assertThat(pendencies.size(), CoreMatchers.equalTo(1));
+        Assert.assertThat(
+            pendencies.get(Lists.newArrayList()),
+            CoreMatchers.equalTo(2L)
+            );
     }
 
+    /**
+     * Test two matching comments.
+     * @throws Exception If something goes wrong.
+     */
     @Test
     public void testTwoMatchingComments() throws Exception {
         final Map<List<String>, Long> pendencies = service.filter(
             new ScriptedRepository("", "", "do it", ""),
-            commentList("do it", "do IT"));
-        assertThat(pendencies.size(), equalTo(1));
-        assertThat(pendencies.get(newArrayList()), equalTo(2L));
+            this.commentList("do it", "do IT")
+            );
+        Assert.assertThat(pendencies.size(), CoreMatchers.equalTo(1));
+        Assert.assertThat(
+            pendencies.get(Lists.newArrayList()),
+            CoreMatchers.equalTo(2L)
+            );
     }
 
+    /**
+     * Test two matching comments with one already processed.
+     * @throws Exception If something goes wrong.
+     */
     @Test
     public void testTwoCommentsWithOneProcessed() throws Exception {
         final Map<List<String>, Long> pendencies = service.filter(
             new ScriptedRepository("", "", "do this", ""),
-            commentList("do this", "do this", "Ok, working on 'do this'..."));
-        assertThat(pendencies.size(), equalTo(1));
-        assertThat(pendencies.get(newArrayList()), equalTo(1L));
+            this.commentList(
+                "do this",
+                "do this",
+                "Ok, working on 'do this'..."
+                )
+            );
+        Assert.assertThat(pendencies.size(), CoreMatchers.equalTo(1));
+        Assert.assertThat(
+            pendencies.get(Lists.newArrayList()),
+            CoreMatchers.equalTo(1L)
+            );
     }
 
+    /**
+     * Test two matching comments with one already processed with different
+     * params.
+     * @throws Exception If something goes wrong.
+     */
     @Test
     public void testWhenOneWasAlreadyExecutedWithDifferentParams()
         throws Exception {
         final Map<List<String>, Long> pendencies = service.filter(
             new ScriptedRepository("", "", "do (it|that)", ""),
-            commentList("do it", "Ok, working on 'do it'...",
-                "Ok, working on 'do it'...", "do that"));
-        assertThat(pendencies.size(), equalTo(1));
-        assertThat(pendencies.get(newArrayList("that")), equalTo(1L));
+            commentList(
+                "do it",
+                "Ok, working on 'do it'...",
+                "Ok, working on 'do it'...",
+                "do that"
+                )
+            );
+        Assert.assertThat(pendencies.size(), CoreMatchers.equalTo(1));
+        Assert.assertThat(
+            pendencies.get(Lists.newArrayList("that")),
+            CoreMatchers.equalTo(1L)
+            );
     }
 
+    /**
+     * Test two matching comments with one already processed with multiple
+     * replies.
+     * @throws Exception If something goes wrong.
+     */
     @Test
     public void testWithMultipleReplies() throws Exception {
         final Map<List<String>, Long> pendencies = service.filter(
             new ScriptedRepository("", "", "do (it|that)", ""),
-            commentList("do it", "do it", "Ok, working on 'do it'...",
-                "Ok, working on 'do it'...", "do it",
-                "do that"));
-        assertThat(pendencies.size(), equalTo(2));
-        assertThat(pendencies.get(newArrayList("it")), equalTo(1L));
-        assertThat(pendencies.get(newArrayList("that")), equalTo(1L));
+            commentList(
+                "do it",
+                "do it",
+                "Ok, working on 'do it'...",
+                "Ok, working on 'do it'...",
+                "do it",
+                "do that"
+                )
+            );
+        Assert.assertThat(pendencies.size(), CoreMatchers.equalTo(2));
+        Assert.assertThat(
+            pendencies.get(Lists.newArrayList("it")),
+            CoreMatchers.equalTo(1L)
+            );
+        Assert.assertThat(
+            pendencies.get(Lists.newArrayList("that")),
+            CoreMatchers.equalTo(1L)
+            );
     }
 
-    private List<Comment> commentList(String... messages) throws IOException {
+    /**
+     * Builds a list of comments for the given messages.
+     * @param messages String list.
+     * @return List of Comment.
+     * @throws IOException If something goes wrong.
+     */
+    private List<Comment> commentList(final String... messages)
+        throws IOException {
         return Stream.of(messages)
             .map(body -> {
                 final Comment comment = new Comment();
                 comment.setBody(body);
                 return comment;
             })
-            .collect(toList());
+            .collect(Collectors.toList());
     }
 }

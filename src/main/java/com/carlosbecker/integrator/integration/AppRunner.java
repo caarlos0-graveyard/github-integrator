@@ -51,7 +51,7 @@ public class AppRunner {
 
     /**
      * Keeps running if config.loop() is true, otherwise runs once.
-     * @throws Exception
+     * @throws Exception If something goes wrong.
      */
     public final void run() throws Exception {
         do {

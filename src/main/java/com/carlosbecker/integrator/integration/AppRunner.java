@@ -36,6 +36,9 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 @AllArgsConstructor(onConstructor = @__(@Inject))
 public class AppRunner {
+    /**
+     * One second, in ms.
+     */
     private static final int SECOND = 1000;
     /**
      * Config.
@@ -50,7 +53,7 @@ public class AppRunner {
      * Keeps running if config.loop() is true, otherwise runs once.
      * @throws Exception
      */
-    public void run() throws Exception {
+    public final void run() throws Exception {
         do {
             this.runOnce();
             this.sleep();

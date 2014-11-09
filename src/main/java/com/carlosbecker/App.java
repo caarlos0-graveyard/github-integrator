@@ -44,10 +44,19 @@ public final class App {
      * @throws Exception If something goes wrong.
      */
     public static void main(String[] args) throws Exception {
+        new App().run();
+    }
+
+    /**
+     * Main
+     * @throws Exception If something goes wrong.
+     */
+    private void run() throws Exception {
         log.info("Starting up...");
         Guice.createInjector(
             new ConfigModule(),
             new GithubModule()
         ).getInstance(AppRunner.class).run();
     }
+
 }

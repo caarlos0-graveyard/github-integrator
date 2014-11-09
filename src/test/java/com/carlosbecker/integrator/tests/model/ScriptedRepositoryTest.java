@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.carlosbecker.model;
+package com.carlosbecker.integrator.tests.model;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;

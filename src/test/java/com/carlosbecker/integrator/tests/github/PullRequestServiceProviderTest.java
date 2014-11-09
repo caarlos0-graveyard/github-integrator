@@ -21,40 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.carlosbecker.github;
+package com.carlosbecker.integrator.tests.github;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import com.carlosbecker.guice.GuiceModules;
 import com.carlosbecker.guice.GuiceTestRunner;
-import com.carlosbecker.integration.TestPropertiesLoader;
 import com.carlosbecker.integrator.github.GithubModule;
-import com.carlosbecker.integrator.model.ScriptedRepositories;
-import com.carlosbecker.integrator.model.ScriptedRepository;
 import javax.inject.Inject;
-import org.junit.ClassRule;
+import org.eclipse.egit.github.core.service.PullRequestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(GuiceTestRunner.class)
 @GuiceModules(GithubModule.class)
-public class RepositoriesProviderTest {
-    @ClassRule
-    public static TestPropertiesLoader cfgLoader = new TestPropertiesLoader();
+public class PullRequestServiceProviderTest {
 
     @Inject
-    private ScriptedRepositories repositories;
+    private PullRequestService service;
 
     @Test
     public void testProvided() throws Exception {
-        assertThat(repositories, notNullValue());
-    }
-
-    @Test
-    public void testCorrectParsing() throws Exception {
-        final ScriptedRepository repository = repositories.iterator().next();
-        assertThat(repository.getId().getOwner(), equalTo("caarlos0"));
-        assertThat(repository.getId().getName(), equalTo("github-integrator"));
+        assertThat(service, notNullValue());
+        assertThat(service.getClient(), notNullValue());
     }
 }

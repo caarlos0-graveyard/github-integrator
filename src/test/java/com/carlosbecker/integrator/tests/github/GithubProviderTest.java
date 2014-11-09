@@ -21,28 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.carlosbecker.github;
+package com.carlosbecker.integrator.tests.github;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import com.carlosbecker.guice.GuiceModules;
 import com.carlosbecker.guice.GuiceTestRunner;
 import com.carlosbecker.integrator.github.GithubModule;
+import com.carlosbecker.integrator.tests.integration.TestPropertiesLoader;
 import javax.inject.Inject;
-import org.eclipse.egit.github.core.service.PullRequestService;
+import org.eclipse.egit.github.core.client.GitHubClient;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-@RunWith(GuiceTestRunner.class)
 @GuiceModules(GithubModule.class)
-public class PullRequestServiceProviderTest {
+@RunWith(GuiceTestRunner.class)
+public class GithubProviderTest {
+    @ClassRule
+    public static TestPropertiesLoader cfgLoader = new TestPropertiesLoader();
 
     @Inject
-    private PullRequestService service;
+    private GitHubClient client;
 
     @Test
     public void testProvided() throws Exception {
-        assertThat(service, notNullValue());
-        assertThat(service.getClient(), notNullValue());
+        assertThat(client, notNullValue());
     }
 }

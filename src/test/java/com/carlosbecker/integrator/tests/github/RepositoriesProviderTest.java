@@ -21,54 +21,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.carlosbecker.github;
+package com.carlosbecker.integrator.tests.github;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
-import com.carlosbecker.integrator.integration.IntegratorConfig;
+import com.carlosbecker.guice.GuiceModules;
+import com.carlosbecker.guice.GuiceTestRunner;
+import com.carlosbecker.integrator.github.GithubModule;
 import com.carlosbecker.integrator.model.ScriptedRepositories;
-import com.carlosbecker.integrator.model.ScriptedRepositoriesProvider;
-import org.junit.Before;
+import com.carlosbecker.integrator.model.ScriptedRepository;
+import com.carlosbecker.integrator.tests.integration.TestPropertiesLoader;
+import javax.inject.Inject;
+import org.junit.ClassRule;
 import org.junit.Test;
-import org.mockito.Mock;
+import org.junit.runner.RunWith;
 
-public class ScriptedRepositoriesProviderMapperTest {
-    private ScriptedRepositoriesProvider provider;
+@RunWith(GuiceTestRunner.class)
+@GuiceModules(GithubModule.class)
+public class RepositoriesProviderTest {
+    @ClassRule
+    public static TestPropertiesLoader cfgLoader = new TestPropertiesLoader();
 
-    @Mock
-    private IntegratorConfig config;
+    @Inject
+    private ScriptedRepositories repositories;
 
-    @Before
-    public void init() {
-        initMocks(this);
-        provider = new ScriptedRepositoriesProvider(config);
+    @Test
+    public void testProvided() throws Exception {
+        assertThat(repositories, notNullValue());
     }
 
     @Test
-    public void nullInput() throws Exception {
-        when(config.executions()).thenReturn(null);
-        ScriptedRepositories repositories = provider.get();
-        assertThat(repositories, notNullValue());
-        assertThat(repositories.isEmpty(), equalTo(true));
-    }
-
-    @Test
-    public void testEmptyInput() throws Exception {
-        when(config.executions()).thenReturn(" ");
-        ScriptedRepositories repositories = provider.get();
-        assertThat(repositories, notNullValue());
-        assertThat(repositories.isEmpty(), equalTo(true));
-    }
-
-    @Test
-    public void testValidInput() throws Exception {
-        when(config.executions()).thenReturn(
-            "./src/test/resources/test.executions.json");
-        ScriptedRepositories repositories = provider.get();
-        assertThat(repositories, notNullValue());
-        assertThat(repositories.isEmpty(), equalTo(false));
+    public void testCorrectParsing() throws Exception {
+        final ScriptedRepository repository = repositories.iterator().next();
+        assertThat(repository.getId().getOwner(), equalTo("caarlos0"));
+        assertThat(repository.getId().getName(), equalTo("github-integrator"));
     }
 }

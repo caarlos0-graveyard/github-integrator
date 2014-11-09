@@ -21,44 +21,54 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.carlosbecker.integration;
+package com.carlosbecker.integrator.tests.github;
 
-import static org.mockito.Mockito.verify;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.mockito.internal.verification.VerificationModeFactory.times;
-import com.carlosbecker.integrator.integration.AppRunner;
 import com.carlosbecker.integrator.integration.IntegratorConfig;
-import com.carlosbecker.integrator.integration.MainIntegrator;
-import java.util.concurrent.atomic.AtomicInteger;
+import com.carlosbecker.integrator.model.ScriptedRepositories;
+import com.carlosbecker.integrator.model.ScriptedRepositoriesProvider;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-public class AppRunnerTest {
-    private AppRunner app;
+public class ScriptedRepositoriesProviderMapperTest {
+    private ScriptedRepositoriesProvider provider;
+
     @Mock
     private IntegratorConfig config;
-    @Mock
-    private MainIntegrator integrator;
 
     @Before
     public void init() {
         initMocks(this);
-        app = new AppRunner(config, integrator);
+        provider = new ScriptedRepositoriesProvider(config);
     }
 
-    @Test(timeout = 500)
-    public void testRunOnce() throws Exception {
-        app.run();
-        verify(integrator).work();
+    @Test
+    public void nullInput() throws Exception {
+        when(config.executions()).thenReturn(null);
+        ScriptedRepositories repositories = provider.get();
+        assertThat(repositories, notNullValue());
+        assertThat(repositories.isEmpty(), equalTo(true));
     }
 
-    @Test(timeout = 500)
-    public void testRunTwice() throws Exception {
-        final AtomicInteger loop = new AtomicInteger(0);
-        when(config.loop()).then(invocation -> loop.incrementAndGet() < 3);
-        app.run();
-        verify(integrator, times(2)).work();
+    @Test
+    public void testEmptyInput() throws Exception {
+        when(config.executions()).thenReturn(" ");
+        ScriptedRepositories repositories = provider.get();
+        assertThat(repositories, notNullValue());
+        assertThat(repositories.isEmpty(), equalTo(true));
+    }
+
+    @Test
+    public void testValidInput() throws Exception {
+        when(config.executions()).thenReturn(
+            "./src/test/resources/test.executions.json");
+        ScriptedRepositories repositories = provider.get();
+        assertThat(repositories, notNullValue());
+        assertThat(repositories.isEmpty(), equalTo(false));
     }
 }

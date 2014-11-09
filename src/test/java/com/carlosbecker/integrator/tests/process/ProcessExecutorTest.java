@@ -21,39 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.carlosbecker.integration;
+package com.carlosbecker.integrator.tests.process;
 
-import lombok.RequiredArgsConstructor;
-import org.junit.rules.ExternalResource;
+import static java.util.Arrays.asList;
+import com.carlosbecker.integrator.process.ProcessExecutor;
+import org.junit.Before;
+import org.junit.Test;
 
-/**
- * Rule that loads up the INTEGRATOR_CONFIG file for tests.
- *
- * @author Carlos Alexandro Becker (caarlos0@gmail.com)
- * @version $Id$
- */
-@RequiredArgsConstructor
-public class TestPropertiesLoader extends ExternalResource {
-    /**
-     * Path to integrator config file
-     */
-    private final transient String config;
+public class ProcessExecutorTest {
 
-    /**
-     * Constructor with the default test.properties
-     */
-    public TestPropertiesLoader() {
-        this("./src/test/resources/test.properties");
+    private ProcessExecutor executor;
+
+    @Before
+    public void init() {
+        this.executor = new ProcessExecutor();
     }
 
-    @Override
-    protected void before() throws Throwable {
-        System.out.println("OI");
-        System.setProperty("INTEGRATOR_CONFIG", config);
+    @Test
+    public void testName() throws Exception {
+        executor.execute("./src/test/resources/sample.sh", asList("user",
+            "repo", "whatever"));
     }
 
-    @Override
-    protected void after() {
-        System.clearProperty("INTEGRATOR_CONFIG");
-    }
 }

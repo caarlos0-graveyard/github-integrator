@@ -21,46 +21,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.carlosbecker.github;
+package com.carlosbecker.integrator.tests.integration;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import com.carlosbecker.guice.GuiceModules;
-import com.carlosbecker.guice.GuiceTestRunner;
-import com.carlosbecker.integration.TestPropertiesLoader;
-import com.carlosbecker.integrator.ConfigModule;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
+import com.carlosbecker.integrator.integration.AppRunner;
 import com.carlosbecker.integrator.integration.IntegratorConfig;
-import javax.inject.Inject;
-import org.junit.ClassRule;
+import com.carlosbecker.integrator.integration.MainIntegrator;
+import java.util.concurrent.atomic.AtomicInteger;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.mockito.Mock;
 
-@GuiceModules(ConfigModule.class)
-@RunWith(GuiceTestRunner.class)
-public class GithubConfigProviderTest {
-    @ClassRule
-    public static TestPropertiesLoader cfgLoader = new TestPropertiesLoader();
-
-    @Inject
+public class AppRunnerTest {
+    private AppRunner app;
+    @Mock
     private IntegratorConfig config;
+    @Mock
+    private MainIntegrator integrator;
 
-    @Test
-    public void testConfigProvided() throws Exception {
-        assertThat(config, notNullValue());
+    @Before
+    public void init() {
+        initMocks(this);
+        app = new AppRunner(config, integrator);
     }
 
-    @Test
-    public void testOauth() throws Exception {
-        assertThat(config.oauth(), notNullValue());
+    @Test(timeout = 500)
+    public void testRunOnce() throws Exception {
+        app.run();
+        verify(integrator).work();
     }
 
-    @Test
-    public void testExecutions() throws Exception {
-        assertThat(config.executions(), notNullValue());
-    }
-
-    @Test
-    public void testPeriod() throws Exception {
-        assertThat(config.period(), notNullValue());
+    @Test(timeout = 500)
+    public void testRunTwice() throws Exception {
+        final AtomicInteger loop = new AtomicInteger(0);
+        when(config.loop()).then(invocation -> loop.incrementAndGet() < 3);
+        app.run();
+        verify(integrator, times(2)).work();
     }
 }

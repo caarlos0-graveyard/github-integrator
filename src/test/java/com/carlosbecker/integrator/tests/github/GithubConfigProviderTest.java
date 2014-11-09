@@ -21,21 +21,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.carlosbecker;
+package com.carlosbecker.integrator.tests.github;
 
-import com.carlosbecker.integration.TestPropertiesLoader;
-import com.carlosbecker.integrator.App;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+import com.carlosbecker.guice.GuiceModules;
+import com.carlosbecker.guice.GuiceTestRunner;
+import com.carlosbecker.integrator.ConfigModule;
+import com.carlosbecker.integrator.integration.IntegratorConfig;
+import com.carlosbecker.integrator.tests.integration.TestPropertiesLoader;
+import javax.inject.Inject;
 import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
-public class AppTest {
-    private static final String CFG = "./src/test/resources/main.test.properties";
-
+@GuiceModules(ConfigModule.class)
+@RunWith(GuiceTestRunner.class)
+public class GithubConfigProviderTest {
     @ClassRule
-    public static TestPropertiesLoader cfg = new TestPropertiesLoader(CFG);
+    public static TestPropertiesLoader cfgLoader = new TestPropertiesLoader();
+
+    @Inject
+    private IntegratorConfig config;
 
     @Test
-    public void testStaticCall() throws Exception {
-        App.main(null);
+    public void testConfigProvided() throws Exception {
+        assertThat(config, notNullValue());
+    }
+
+    @Test
+    public void testOauth() throws Exception {
+        assertThat(config.oauth(), notNullValue());
+    }
+
+    @Test
+    public void testExecutions() throws Exception {
+        assertThat(config.executions(), notNullValue());
+    }
+
+    @Test
+    public void testPeriod() throws Exception {
+        assertThat(config.period(), notNullValue());
     }
 }

@@ -23,11 +23,8 @@
  */
 package com.carlosbecker.model;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-import static com.google.common.collect.Lists.newArrayList;
-import static java.lang.String.format;
-import static java.util.regex.Pattern.CASE_INSENSITIVE;
-import static java.util.regex.Pattern.compile;
+import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,72 +32,141 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.egit.github.core.RepositoryId;
 
+/**
+ * A repository that is scripted.
+ * @author Carlos Alexandro Becker (caarlos0@gmail.com)
+ * @version $Id$
+ */
 @RequiredArgsConstructor
 public class ScriptedRepository {
     private static final String PLEASE = "(,? please)?";
     private static final String REQUEST_REGEX = "^%s%s([^a-zA-Z0-9\\s]*)?$";
     public static final String REPLY_START = "Ok, working on '";
     public static final String REPLY_END = "'...";
+    /**
+     * The repository owner
+     */
     @Getter
     private final String owner;
+    /**
+     * The repository name
+     */
     @Getter
     private final String name;
+    /**
+     * The regex to process
+     */
     private final String regex;
+    /**
+     * The script to execute
+     */
     @Getter
     private final String script;
 
+    /**
+     * Builds an repository id for this scripted repository
+     * @return A RepositoryId representing this repository
+     */
     public RepositoryId getId() {
         return new RepositoryId(owner, name);
     }
 
-    public boolean isAsk(String body) {
-        return patternFor(regex)
+    /**
+     * Checks wether the given comment is requesting something from this
+     * Scripted Repository
+     * @param body Comment body
+     * @return True if this repository should process this comment, false
+     *         otherwise
+     */
+    public boolean isAsk(final String body) {
+        return pattern()
             .matcher(body)
             .matches();
     }
 
-    private Pattern patternFor(String exp) {
-        return compile(format(REQUEST_REGEX, exp, PLEASE), CASE_INSENSITIVE);
+    /**
+     * Builds a pattern for the repository's regex.
+     * @return A Pattern
+     */
+    private Pattern pattern() {
+        return Pattern.compile(
+            String.format(REQUEST_REGEX, regex, PLEASE),
+            Pattern.CASE_INSENSITIVE
+            );
     }
 
-    public String getReplyMessage(List<String> params) {
+    /**
+     * Builds a reply message for the given params
+     * @param params A param list
+     * @return A reply
+     */
+    public String getReplyMessage(final List<String> params) {
         String message = regex;
-        for (final String param : params)
+        for (final String param : params) {
             message = regex.replaceFirst("\\(.*\\)", param);
-        return format("%s%s%s", REPLY_START, message, REPLY_END);
+        }
+        return String.format("%s%s%s", REPLY_START, message, REPLY_END);
     }
 
-    public boolean isReply(String body) {
+    /**
+     * Checks wether the given comment is replying something from this
+     * Scripted Repository
+     * @param body Comment body
+     * @return True if this repository processed this comment, false otherwise
+     */
+    public boolean isReply(final String body) {
         return isAsk(extractOriginalAsk(body));
     }
 
-    private String extractOriginalAsk(String body) {
+    /**
+     * Get the request message for the given reply.
+     * @param body Reply body
+     * @return The possible request body
+     */
+    private String extractOriginalAsk(final String body) {
         return body
-            .replaceAll(format("^%s", REPLY_START), "")
-            .replaceAll(format("%s$", REPLY_END), "");
+            .replaceAll(String.format("^%s", REPLY_START), "")
+            .replaceAll(String.format("%s$", REPLY_END), "");
     }
 
-    public List<String> getReplyParams(String body) {
+    /**
+     * Get the reply parameters
+     * @param body Reply body
+     * @return List of parameters
+     */
+    public List<String> getReplyParams(final String body) {
         return getParams(extractOriginalAsk(body));
     }
 
-    public List<String> getParams(String body) {
-        if (isNullOrEmpty(body) || !isAsk(body))
-            return newArrayList();
+    /**
+     * Extracts the parameters of a request body
+     * @param body Request body
+     * @return List of parameters
+     */
+    public List<String> getParams(final String body) {
+        if (Strings.isNullOrEmpty(body) || !isAsk(body))
+            return Lists.newArrayList();
         return buildParamList(body);
     }
 
-    private List<String> buildParamList(String body) {
-        final List<String> params = newArrayList();
-        final Matcher matcher = patternFor(regex).matcher(body);
+    private List<String> buildParamList(final String body) {
+        final List<String> params = Lists.newArrayList();
+        final Matcher matcher = pattern().matcher(body);
         matcher.matches();
-        for (int i = 1; i <= matcher.groupCount(); i++)
-            if (isValidParam(matcher.group(i)))
-                params.add(matcher.group(i));
+        for (int groupIdx = 1; groupIdx <= matcher.groupCount(); groupIdx++) {
+            if (isValidParam(matcher.group(groupIdx))) {
+                params.add(matcher.group(groupIdx));
+            }
+        }
         return params;
     }
 
+    /**
+     * Checks wether the given param is valid.
+     * @param param Param to check
+     * @return True if valid, false otherwise.
+     */
     private boolean isValidParam(final String param) {
-        return !isNullOrEmpty(param) && !param.matches(PLEASE);
+        return !Strings.isNullOrEmpty(param) && !param.matches(PLEASE);
     }
 }

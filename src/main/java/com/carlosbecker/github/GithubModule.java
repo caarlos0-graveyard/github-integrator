@@ -31,17 +31,23 @@ import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.IssueService;
 import org.eclipse.egit.github.core.service.PullRequestService;
 
+/**
+ * Github Guice Module.
+ *
+ * @author Carlos Alexandro Becker (caarlos0@gmail.com)
+ * @version $Id$
+ */
 public class GithubModule extends AbstractModule {
     @Override
     protected void configure() {
         install(new ConfigModule());
 
         bind(GitHubClient.class).toProvider(GitHubClientProvider.class);
-        bind(PullRequestService.class).toProvider(
-            PullRequestServiceProvider.class);
+        bind(PullRequestService.class)
+            .toProvider(PullRequestServiceProvider.class);
         bind(IssueService.class).toProvider(IssueServiceProvider.class);
 
-        bind(ScriptedRepositories.class).toProvider(
-            ScriptedRepositoriesProvider.class);
+        bind(ScriptedRepositories.class)
+            .toProvider(ScriptedRepositoriesProvider.class);
     }
 }

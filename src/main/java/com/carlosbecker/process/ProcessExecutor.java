@@ -27,7 +27,18 @@ import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Executes Scripts.
+ * @author Carlos Alexandro Becker (caarlos0@gmail.com)
+ * @version $Id$
+ */
 public class ProcessExecutor {
+    /**
+     * Execute a script.
+     * @param script Script to execute
+     * @param params Parameters to pass down to the script
+     * @throws IOException If something goes wrong
+     */
     public void execute(String script, List<String> params) throws IOException {
         final List<String> cmd = Lists.newArrayList();
         cmd.add(script);

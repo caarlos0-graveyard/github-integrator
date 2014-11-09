@@ -26,6 +26,11 @@ package com.carlosbecker.integration;
 import com.google.inject.Provider;
 import org.aeonbits.owner.ConfigFactory;
 
+/**
+ * Provides the integrator configuration.
+ * @author Carlos Alexandro Becker (caarlos0@gmail.com)
+ * @version $Id$
+ */
 public class IntegratorConfigProvider implements Provider<IntegratorConfig> {
     @Override
     public IntegratorConfig get() {

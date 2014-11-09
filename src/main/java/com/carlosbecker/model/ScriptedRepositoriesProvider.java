@@ -38,13 +38,23 @@ import java.util.List;
 import javax.inject.Inject;
 import lombok.AllArgsConstructor;
 
+/**
+ * Produces the Scripted Repositories list.
+ * @author Carlos Alexandro Becker (caarlos0@gmail.com)
+ * @version $Id$
+ */
 @AllArgsConstructor(onConstructor = @__(@Inject))
 public class ScriptedRepositoriesProvider implements
-    Provider<ScriptedRepositories> {
+Provider<ScriptedRepositories> {
+    /**
+     * The Scripted Repository List type token
+     */
     private static final Type TYPE = new TypeToken<List<ScriptedRepository>>() {
     }.getType();
-
-    private final IntegratorConfig config;
+    /**
+     * Config
+     */
+    private final transient IntegratorConfig config;
 
     @Override
     public ScriptedRepositories get() {
@@ -53,15 +63,24 @@ public class ScriptedRepositoriesProvider implements
         return parse();
     }
 
+    /**
+     * Parse the executions file to a ScriptedRepositories instance.
+     * @return ScriptedRepositories instance.
+     */
     private ScriptedRepositories parse() {
         try {
-            return new ScriptedRepositories(new Gson().fromJson(loadFile(),
-                TYPE));
+            final Gson gson = new Gson();
+            return new ScriptedRepositories(gson.fromJson(loadFile(), TYPE));
         } catch (final FileNotFoundException e) {
             return new ScriptedRepositories(newArrayList());
         }
     }
 
+    /**
+     * Load the executions file from settings.
+     * @return The BufferedReader of the file.
+     * @throws FileNotFoundException If the file doesn't exists.
+     */
     private BufferedReader loadFile() throws FileNotFoundException {
         final File file = new File(config.executions());
         final FileInputStream inputStream = new FileInputStream(file);

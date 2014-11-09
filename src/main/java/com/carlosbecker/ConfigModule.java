@@ -27,6 +27,12 @@ import com.carlosbecker.integration.IntegratorConfig;
 import com.carlosbecker.integration.IntegratorConfigProvider;
 import com.google.inject.AbstractModule;
 
+/**
+ * Config Guice Module.
+ *
+ * @author Carlos Alexandro Becker (caarlos0@gmail.com)
+ * @version $Id$
+ */
 public class ConfigModule extends AbstractModule {
     @Override
     protected void configure() {

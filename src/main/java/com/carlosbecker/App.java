@@ -23,16 +23,31 @@
  */
 package com.carlosbecker;
 
-import static com.google.inject.Guice.createInjector;
 import com.carlosbecker.github.GithubModule;
 import com.carlosbecker.integration.AppRunner;
+import com.google.inject.Guice;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j;
 
+/**
+ * Main App class.
+ * @author Carlos Alexandro Becker (caarlos0@gmail.com)
+ * @version $Id$
+ */
 @Log4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class App {
+    /**
+     * Main
+     * @param args Params
+     * @throws Exception If something goes wrong.
+     */
     public static void main(String[] args) throws Exception {
         log.info("Starting up...");
-        createInjector(new ConfigModule(), new GithubModule()).getInstance(
-            AppRunner.class).run();
+        Guice.createInjector(
+            new ConfigModule(),
+            new GithubModule()
+        ).getInstance(AppRunner.class).run();
     }
 }

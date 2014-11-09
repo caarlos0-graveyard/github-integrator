@@ -26,16 +26,26 @@ package com.carlosbecker.github;
 import com.carlosbecker.integration.IntegratorConfig;
 import com.google.inject.Provider;
 import javax.inject.Inject;
+import lombok.AllArgsConstructor;
 import org.eclipse.egit.github.core.client.GitHubClient;
 
+/**
+ * Provides the GithubClient instance.
+ *
+ * @author Carlos Alexandro Becker (caarlos0@gmail.com)
+ * @version $Id$
+ */
+@AllArgsConstructor(onConstructor = @__(@Inject))
 public class GitHubClientProvider implements Provider<GitHubClient> {
-    @Inject
-    private IntegratorConfig config;
+    /**
+     * Config.
+     */
+    private transient IntegratorConfig config;
 
     @Override
     public GitHubClient get() {
-        GitHubClient client = new GitHubClient();
-        client.setOAuth2Token(config.oauth());
+        final GitHubClient client = new GitHubClient();
+        client.setOAuth2Token(this.config.oauth());
         return client;
     }
 }

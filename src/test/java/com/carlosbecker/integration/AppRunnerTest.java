@@ -54,7 +54,7 @@ public class AppRunnerTest {
     @Test(timeout = 500)
     public void testRunTwice() throws Exception {
         final AtomicInteger loop = new AtomicInteger(0);
-        when(config.loop()).then(invocation -> loop.incrementAndGet() < 2);
+        when(config.loop()).then(invocation -> loop.incrementAndGet() < 3);
         app.run();
         verify(integrator, times(2)).work();
     }

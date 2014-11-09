@@ -27,14 +27,31 @@ import java.util.Iterator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Represents a list of scripted repositories.
+ *
+ * @author Carlos Alexandro Becker (caarlos0@gmail.com)
+ * @version $Id$
+ */
 @RequiredArgsConstructor
 public class ScriptedRepositories {
+    /**
+     * List of scripted repositories.
+     */
     private final List<ScriptedRepository> repositories;
 
+    /**
+     * Iterates over scripted repositories.
+     * @return Scripted Repositories Iterator.
+     */
     public Iterator<ScriptedRepository> iterator() {
         return repositories.iterator();
     }
 
+    /**
+     * Checks wether the repository list is empty.
+     * @return True if empty, false otherwise.
+     */
     public boolean isEmpty() {
         return repositories.isEmpty();
     }

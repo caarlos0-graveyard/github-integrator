@@ -24,18 +24,17 @@
 package com.carlosbecker.process;
 
 import static java.util.Arrays.asList;
-import com.carlosbecker.guice.GuiceModules;
-import com.carlosbecker.guice.GuiceTestRunner;
-import javax.inject.Inject;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-@RunWith(GuiceTestRunner.class)
-@GuiceModules(ProcessModule.class)
 public class ProcessExecutorTest {
 
-    @Inject
     private ProcessExecutor executor;
+
+    @Before
+    public void init() {
+        this.executor = new ProcessExecutor();
+    }
 
     @Test
     public void testName() throws Exception {

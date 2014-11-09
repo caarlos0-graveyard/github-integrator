@@ -30,23 +30,15 @@ import com.carlosbecker.guice.GuiceTestRunner;
 import com.carlosbecker.integration.TestPropertiesLoader;
 import javax.inject.Inject;
 import org.eclipse.egit.github.core.client.GitHubClient;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @GuiceModules(GithubModule.class)
 @RunWith(GuiceTestRunner.class)
 public class GithubProviderTest {
-    @BeforeClass
-    public static void init() throws Exception {
-        TestPropertiesLoader.init();
-    }
-
-    @AfterClass
-    public static void shutdown() {
-        TestPropertiesLoader.shutdown();
-    }
+    @ClassRule
+    public static TestPropertiesLoader cfgLoader = new TestPropertiesLoader();
 
     @Inject
     private GitHubClient client;

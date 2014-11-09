@@ -27,22 +27,51 @@ import javax.inject.Inject;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
 
+/**
+ * The App Runner
+ *
+ * @author Carlos Alexandro Becker (caarlos0@gmail.com)
+ * @version $Id$
+ */
 @Log4j
 @AllArgsConstructor(onConstructor = @__(@Inject))
 public class AppRunner {
-    private final IntegratorConfig config;
-    private final MainIntegrator integrator;
+    /**
+     * Config.
+     */
+    private final transient IntegratorConfig config;
+    /**
+     * Integrator.
+     */
+    private final transient MainIntegrator integrator;
 
+    /**
+     * Keeps running if config.loop() is true, otherwise runs once.
+     * @throws Exception
+     */
     public void run() throws Exception {
         do {
             runOnce();
+            sleep();
         } while (config.loop());
     }
 
-    private void runOnce() throws InterruptedException {
+    /**
+     * Sleep if config.loop() is true. Otherwise does nothing.
+     * @throws InterruptedException If fails at sleep.
+     */
+    private void sleep() throws InterruptedException {
+        if (config.loop()) {
+            log.info("Waiting...");
+            Thread.sleep(config.period() * 1000);
+        }
+    }
+
+    /**
+     * Work on integrator one time.
+     */
+    private void runOnce() {
         log.info("Running...");
         integrator.work();
-        log.info("Waiting...");
-        Thread.sleep(config.period() * 1000);
     }
 }

@@ -32,23 +32,15 @@ import com.carlosbecker.integration.TestPropertiesLoader;
 import com.carlosbecker.model.ScriptedRepositories;
 import com.carlosbecker.model.ScriptedRepository;
 import javax.inject.Inject;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(GuiceTestRunner.class)
 @GuiceModules(GithubModule.class)
 public class RepositoriesProviderTest {
-    @BeforeClass
-    public static void init() throws Exception {
-        TestPropertiesLoader.init();
-    }
-
-    @AfterClass
-    public static void shutdown() {
-        TestPropertiesLoader.shutdown();
-    }
+    @ClassRule
+    public static TestPropertiesLoader cfgLoader = new TestPropertiesLoader();
 
     @Inject
     private ScriptedRepositories repositories;

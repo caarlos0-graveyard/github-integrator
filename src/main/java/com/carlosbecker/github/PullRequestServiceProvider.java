@@ -25,12 +25,21 @@ package com.carlosbecker.github;
 
 import com.google.inject.Provider;
 import javax.inject.Inject;
+import lombok.AllArgsConstructor;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.PullRequestService;
 
+/**
+ * PullRequest service provider.
+ * @author Carlos Alexandro Becker (caarlos0@gmail.com)
+ * @version $Id$
+ */
+@AllArgsConstructor(onConstructor = @__(@Inject))
 public class PullRequestServiceProvider implements Provider<PullRequestService> {
-    @Inject
-    private GitHubClient client;
+    /**
+     * Client.
+     */
+    private transient GitHubClient client;
 
     @Override
     public PullRequestService get() {

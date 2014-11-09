@@ -23,16 +23,37 @@
  */
 package com.carlosbecker.integration;
 
-public class TestPropertiesLoader {
-    public static void init() {
-        init("./src/test/resources/test.properties");
+import lombok.RequiredArgsConstructor;
+import org.junit.rules.ExternalResource;
+
+/**
+ * Rule that loads up the INTEGRATOR_CONFIG file for tests.
+ *
+ * @author Carlos Alexandro Becker (caarlos0@gmail.com)
+ * @version $Id$
+ */
+@RequiredArgsConstructor
+public class TestPropertiesLoader extends ExternalResource {
+    /**
+     * Path to integrator config file
+     */
+    private final transient String config;
+
+    /**
+     * Constructor with the default test.properties
+     */
+    public TestPropertiesLoader() {
+        this("./src/test/resources/test.properties");
     }
 
-    public static void init(String config) {
+    @Override
+    protected void before() throws Throwable {
+        System.out.println("OI");
         System.setProperty("INTEGRATOR_CONFIG", config);
     }
 
-    public static void shutdown() {
+    @Override
+    protected void after() {
         System.clearProperty("INTEGRATOR_CONFIG");
     }
 }

@@ -25,12 +25,21 @@ package com.carlosbecker.github;
 
 import com.google.inject.Provider;
 import javax.inject.Inject;
+import lombok.AllArgsConstructor;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.IssueService;
 
+/**
+ * Provides the IssueService instance.
+ * @author Carlos Alexandro Becker (caarlos0@gmail.com)
+ * @version $Id$
+ */
+@AllArgsConstructor(onConstructor = @__(@Inject))
 public class IssueServiceProvider implements Provider<IssueService> {
-    @Inject
-    private GitHubClient client;
+    /**
+     * Github client.
+     */
+    private transient GitHubClient client;
 
     @Override
     public IssueService get() {

@@ -25,19 +25,16 @@ package com.carlosbecker.github;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-
 import com.carlosbecker.ConfigModule;
 import com.carlosbecker.guice.GuiceModules;
 import com.carlosbecker.guice.GuiceTestRunner;
 import com.carlosbecker.integration.IntegratorConfig;
 import com.carlosbecker.integration.TestPropertiesLoader;
-
+import javax.inject.Inject;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import javax.inject.Inject;
 
 @GuiceModules(ConfigModule.class)
 @RunWith(GuiceTestRunner.class)

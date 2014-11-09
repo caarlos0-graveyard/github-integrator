@@ -24,7 +24,6 @@
 package com.carlosbecker.integration;
 
 import com.google.inject.Provider;
-
 import org.aeonbits.owner.ConfigFactory;
 
 public class IntegratorConfigProvider implements Provider<IntegratorConfig> {

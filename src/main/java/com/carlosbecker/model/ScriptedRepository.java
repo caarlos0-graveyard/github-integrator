@@ -28,12 +28,12 @@ import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.String.format;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static java.util.regex.Pattern.compile;
-import org.eclipse.egit.github.core.RepositoryId;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.eclipse.egit.github.core.RepositoryId;
 
 @RequiredArgsConstructor
 public class ScriptedRepository {
@@ -55,8 +55,8 @@ public class ScriptedRepository {
 
     public boolean isAsk(String body) {
         return patternFor(regex)
-                .matcher(body)
-                .matches();
+            .matcher(body)
+            .matches();
     }
 
     private Pattern patternFor(String exp) {
@@ -76,8 +76,8 @@ public class ScriptedRepository {
 
     private String extractOriginalAsk(String body) {
         return body
-                .replaceAll(format("^%s", REPLY_START), "")
-                .replaceAll(format("%s$", REPLY_END), "");
+            .replaceAll(format("^%s", REPLY_START), "")
+            .replaceAll(format("%s$", REPLY_END), "");
     }
 
     public List<String> getReplyParams(String body) {

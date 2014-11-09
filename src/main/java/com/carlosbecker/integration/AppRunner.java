@@ -24,7 +24,6 @@
 package com.carlosbecker.integration;
 
 import javax.inject.Inject;
-
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
 

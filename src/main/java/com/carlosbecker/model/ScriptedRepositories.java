@@ -34,6 +34,7 @@ public class ScriptedRepositories {
     public Iterator<ScriptedRepository> iterator() {
         return repositories.iterator();
     }
+
     public boolean isEmpty() {
         return repositories.isEmpty();
     }

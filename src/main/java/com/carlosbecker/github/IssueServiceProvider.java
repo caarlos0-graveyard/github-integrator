@@ -23,10 +23,10 @@
  */
 package com.carlosbecker.github;
 
+import com.google.inject.Provider;
 import javax.inject.Inject;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.IssueService;
-import com.google.inject.Provider;
 
 public class IssueServiceProvider implements Provider<IssueService> {
     @Inject

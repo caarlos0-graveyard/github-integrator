@@ -28,14 +28,12 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-
 import com.carlosbecker.integration.IntegratorConfig;
 import com.carlosbecker.model.ScriptedRepositories;
 import com.carlosbecker.model.ScriptedRepositoriesProvider;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
 
 public class ScriptedRepositoriesProviderMapperTest {
     private ScriptedRepositoriesProvider provider;
@@ -68,7 +66,7 @@ public class ScriptedRepositoriesProviderMapperTest {
     @Test
     public void testValidInput() throws Exception {
         when(config.executions()).thenReturn(
-                "./src/test/resources/test.executions.json");
+            "./src/test/resources/test.executions.json");
         ScriptedRepositories repositories = provider.get();
         assertThat(repositories, notNullValue());
         assertThat(repositories.isEmpty(), equalTo(false));

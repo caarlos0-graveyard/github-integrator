@@ -33,12 +33,14 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
-
 import com.carlosbecker.model.ScriptedRepositories;
 import com.carlosbecker.model.ScriptedRepository;
 import com.carlosbecker.process.ProcessExecutor;
 import com.google.common.collect.Maps;
-
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.PullRequest;
@@ -51,11 +53,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class MainIntegratorTest {
     private MainIntegrator integrator;
@@ -73,12 +70,14 @@ public class MainIntegratorTest {
     @Before
     public void init() {
         initMocks(this);
-        integrator = new MainIntegrator(prService, issueService, repositories, executor, pendencyService);
+        integrator = new MainIntegrator(prService, issueService, repositories,
+            executor, pendencyService);
     }
 
     @Test
     public void testNoRepositories() throws Exception {
-        when(repositories.iterator()).thenReturn(new ArrayList<ScriptedRepository>().iterator());
+        when(repositories.iterator()).thenReturn(
+            new ArrayList<ScriptedRepository>().iterator());
         integrator.work();
         verifyZeroInteractions(issueService);
         verifyZeroInteractions(prService);
@@ -88,10 +87,12 @@ public class MainIntegratorTest {
     public void testPRWithNoComments() throws Exception {
         mockPullRequest();
         mockRepository();
-        when(issueService.getComments(any(IRepositoryIdProvider.class), eq(1))).thenReturn(newArrayList());
+        when(issueService.getComments(any(IRepositoryIdProvider.class), eq(1)))
+            .thenReturn(newArrayList());
         integrator.work();
-        verify(issueService, times(0)).createComment(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
-                Mockito.anyString());
+        verify(issueService, times(0)).createComment(Mockito.anyString(),
+            Mockito.anyString(), Mockito.anyString(),
+            Mockito.anyString());
         verifyZeroInteractions(executor);
     }
 
@@ -101,8 +102,9 @@ public class MainIntegratorTest {
         mockRepository();
         mockComments("");
         integrator.work();
-        verify(issueService, times(0)).createComment(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
-                Mockito.anyString());
+        verify(issueService, times(0)).createComment(Mockito.anyString(),
+            Mockito.anyString(), Mockito.anyString(),
+            Mockito.anyString());
         verifyZeroInteractions(executor);
     }
 
@@ -112,8 +114,9 @@ public class MainIntegratorTest {
         mockRepository();
         mockComments("This will not match. Don't do it.");
         integrator.work();
-        verify(issueService, times(0)).createComment(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
-                Mockito.anyString());
+        verify(issueService, times(0)).createComment(Mockito.anyString(),
+            Mockito.anyString(), Mockito.anyString(),
+            Mockito.anyString());
         verifyZeroInteractions(executor);
     }
 
@@ -123,8 +126,9 @@ public class MainIntegratorTest {
         mockRepository();
         mockComments("do it", "Ok, working on 'do it'...");
         integrator.work();
-        verify(issueService, times(0)).createComment(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
-                Mockito.anyString());
+        verify(issueService, times(0)).createComment(Mockito.anyString(),
+            Mockito.anyString(), Mockito.anyString(),
+            Mockito.anyString());
         verifyZeroInteractions(executor);
     }
 
@@ -133,15 +137,18 @@ public class MainIntegratorTest {
     public void testModerateScenario() throws Exception {
         mockPullRequest();
         final ScriptedRepository repository = mockRepository("do (it|that)");
-        mockComments("do it", "do that", "Ok, working on 'do it'...", "Ok, working on 'do that'...", "do that again",
-                "do it", "nice", "+1", ":+1:");
+        mockComments("do it", "do that", "Ok, working on 'do it'...",
+            "Ok, working on 'do that'...", "do that again",
+            "do it", "nice", "+1", ":+1:");
         final Map<List<String>, Long> comments = Maps.newHashMap();
         comments.put(newArrayList("it"), 1L);
-        when(pendencyService.filter(eq(repository), any(List.class))).thenReturn(comments);
+        when(pendencyService.filter(eq(repository), any(List.class)))
+            .thenReturn(comments);
 
         integrator.work();
 
-        verify(issueService).createComment(eq("user"), eq("repo"), eq(1), eq("Ok, working on 'do it'..."));
+        verify(issueService).createComment(eq("user"), eq("repo"), eq(1),
+            eq("Ok, working on 'do it'..."));
     }
 
     @SuppressWarnings("unchecked")
@@ -152,9 +159,12 @@ public class MainIntegratorTest {
         mockComments("do it");
         final Map<List<String>, Long> comments = Maps.newHashMap();
         comments.put(newArrayList(), 1L);
-        when(pendencyService.filter(eq(repository), any(List.class))).thenReturn(comments);
-        when(issueService.createComment(eq("user"), eq("repo"), eq(1), eq("Ok, working on 'do it'..."))).thenThrow(
-                IOException.class);
+        when(pendencyService.filter(eq(repository), any(List.class)))
+            .thenReturn(comments);
+        when(
+            issueService.createComment(eq("user"), eq("repo"), eq(1),
+                eq("Ok, working on 'do it'..."))).thenThrow(
+            IOException.class);
         integrator.work();
     }
 
@@ -162,25 +172,28 @@ public class MainIntegratorTest {
     @SuppressWarnings("unchecked")
     public void testGithubParseError() throws Exception {
         final ScriptedRepository repo = mockRepository();
-        when(prService.getPullRequests(eq(repo.getId()), eq("open"))).thenThrow(IOException.class);
+        when(prService.getPullRequests(eq(repo.getId()), eq("open")))
+            .thenThrow(IOException.class);
         integrator.work();
         verifyZeroInteractions(issueService);
     }
 
     private void mockComments(String... messages) throws IOException {
         final List<Comment> comments = from(asList(messages))
-                .transform(input -> {
-                    final Comment comment = new Comment();
-                    comment.setBody(input);
-                    return comment;
-                }).toList();
-        when(issueService.getComments(any(IRepositoryIdProvider.class), eq(1))).thenReturn(comments);
+            .transform(input -> {
+                final Comment comment = new Comment();
+                comment.setBody(input);
+                return comment;
+            }).toList();
+        when(issueService.getComments(any(IRepositoryIdProvider.class), eq(1)))
+            .thenReturn(comments);
     }
 
     private ScriptedRepository mockRepository(String regex) {
-        final ScriptedRepository repository = new ScriptedRepository("user", "repo", regex, "echo");
+        final ScriptedRepository repository = new ScriptedRepository("user",
+            "repo", regex, "echo");
         when(repositories.iterator()).thenReturn(
-                asList(repository).iterator());
+            asList(repository).iterator());
         return repository;
     }
 
@@ -189,7 +202,9 @@ public class MainIntegratorTest {
     }
 
     private void mockPullRequest() throws IOException {
-        when(prService.getPullRequests(any(IRepositoryIdProvider.class), eq("open"))).thenReturn(asList(mockPR()));
+        when(
+            prService.getPullRequests(any(IRepositoryIdProvider.class),
+                eq("open"))).thenReturn(asList(mockPR()));
     }
 
     private PullRequest mockPR() {

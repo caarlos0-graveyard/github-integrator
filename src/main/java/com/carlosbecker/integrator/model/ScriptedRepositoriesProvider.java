@@ -48,6 +48,7 @@ public class ScriptedRepositoriesProvider implements
     Provider<ScriptedRepositories> {
     /**
      * The Scripted Repository List type token.
+     * @checkstyle WhitespaceAroundCheck (5 lines)
      */
     private static final Type TYPE = new TypeToken<List<ScriptedRepository>>() {
     }.getType();

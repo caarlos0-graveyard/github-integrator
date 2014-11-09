@@ -52,7 +52,7 @@ public class PullRequestServiceProviderTest {
      * @throws Exception If something goes wrong.
      */
     @Test
-    public void testProvided() throws Exception {
+    public final void testProvided() throws Exception {
         Assert.assertThat(this.service, CoreMatchers.notNullValue());
         Assert.assertThat(
             this.service.getClient(),

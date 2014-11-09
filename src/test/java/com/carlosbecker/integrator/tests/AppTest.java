@@ -40,7 +40,7 @@ public class AppTest {
     @ClassRule
     public static ConfigLoader cfg = new ConfigLoader(
         "./src/test/resources/main.test.properties"
-        );
+    );
 
     /**
      * Tests the static call.

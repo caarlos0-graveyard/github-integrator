@@ -35,7 +35,7 @@ import org.junit.Test;
  */
 public class ProcessExecutorTest {
     /**
-     * Executor
+     * Executor.
      */
     private transient ProcessExecutor executor;
 
@@ -43,7 +43,7 @@ public class ProcessExecutorTest {
      * Tear up.
      */
     @Before
-    public void init() {
+    public final void init() {
         this.executor = new ProcessExecutor();
     }
 
@@ -52,10 +52,10 @@ public class ProcessExecutorTest {
      * @throws Exception If something goes wrong.
      */
     @Test
-    public void testItWorks() throws Exception {
+    public final void testItWorks() throws Exception {
         this.executor.execute(
             "./src/test/resources/sample.sh",
             Arrays.asList("user", "repo", "whatever")
-            );
+        );
     }
 }

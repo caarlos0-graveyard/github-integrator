@@ -88,8 +88,7 @@ public class ScriptedRepository {
      * Checks wether the given comment is requesting something from this
      * Scripted Repository.
      * @param body Comment body.
-     * @return True if this repository should process this comment, false
-     *         otherwise
+     * @return True if this repository should process this comment.
      */
     public final boolean isAsk(final String body) {
         return this.pattern()
@@ -98,10 +97,10 @@ public class ScriptedRepository {
     }
 
     /**
-     * Checks wether the given comment is replying something from this
+     * Checks whether the given comment is replying something from this
      * Scripted Repository.
      * @param body Comment body
-     * @return True if this repository processed this comment, false otherwise
+     * @return True if this repository processed this comment.
      */
     public final boolean isReply(final String body) {
         return this.isAsk(this.extractOriginalAsk(body));
@@ -149,7 +148,7 @@ public class ScriptedRepository {
         return Pattern.compile(
             String.format(REQUEST_REGEX, this.regex, PLEASE),
             Pattern.CASE_INSENSITIVE
-            );
+        );
     }
 
     /**

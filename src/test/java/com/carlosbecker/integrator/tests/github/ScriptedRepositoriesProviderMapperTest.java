@@ -76,7 +76,7 @@ public class ScriptedRepositoriesProviderMapperTest {
      * @throws Exception If something goes wrong.
      */
     @Test
-    public void testEmptyInput() throws Exception {
+    public final void testEmptyInput() throws Exception {
         Mockito.when(this.config.executions()).thenReturn(" ");
         final ScriptedRepositories repositories = this.provider.get();
         Assert.assertThat(repositories, CoreMatchers.notNullValue());
@@ -88,7 +88,7 @@ public class ScriptedRepositoriesProviderMapperTest {
      * @throws Exception If something goes wrong.
      */
     @Test
-    public void testValidInput() throws Exception {
+    public final void testValidInput() throws Exception {
         Mockito.when(this.config.executions())
             .thenReturn("./src/test/resources/test.executions.json");
         final ScriptedRepositories repositories = this.provider.get();

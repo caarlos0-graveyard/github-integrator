@@ -106,7 +106,7 @@ public class MainIntegratorTest {
     @Test
     public final void testNoRepositories() throws Exception {
         Mockito.when(this.repositories.iterator())
-        .thenReturn(new ArrayList<ScriptedRepository>().iterator());
+            .thenReturn(new ArrayList<ScriptedRepository>(0).iterator());
         this.integrator.work();
         Mockito.verifyZeroInteractions(issueService);
         Mockito.verifyZeroInteractions(prService);

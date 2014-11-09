@@ -31,7 +31,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Scripted Repository Test
+ * Scripted Repository Test.
  * @author Carlos Alexandro Becker (caarlos0@gmail.com)
  * @version $Id$
  * @checkstyle MultipleStringLiteralsCheck (200 lines)
@@ -61,7 +61,7 @@ public class ScriptedRepositoryTest {
         Assert.assertThat(
             subject.isAsk("test this please!"),
             CoreMatchers.equalTo(true)
-            );
+        );
         Assert.assertThat(
             subject.isAsk("test this please;"),
             CoreMatchers.equalTo(true)
@@ -169,7 +169,7 @@ public class ScriptedRepositoryTest {
      * @throws Exception If something goes wrong.
      */
     @Test
-    public void testGetParamsWithNoBody() throws Exception {
+    public final void testGetParamsWithNoBody() throws Exception {
         final ScriptedRepository subject = new ScriptedRepository(
             "",
             "",
@@ -195,7 +195,7 @@ public class ScriptedRepositoryTest {
      * @throws Exception If something goes wrong.
      */
     @Test
-    public void testReply() throws Exception {
+    public final void testReply() throws Exception {
         final ScriptedRepository subject = new ScriptedRepository(
             "",
             "",
@@ -210,7 +210,7 @@ public class ScriptedRepositoryTest {
         );
         Assert.assertThat(
             subject.getReplyParams(
-            "Ok, working on 'deploy this to production, please'..."
+                "Ok, working on 'deploy this to production, please'..."
             ),
             CoreMatchers.equalTo(Arrays.asList("production"))
         );

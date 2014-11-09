@@ -52,14 +52,14 @@ public class RepositoriesProviderTest {
     public static ConfigLoader configLoader = new ConfigLoader();
 
     /**
-     * Scripted Repositories
+     * Scripted Repositories.
      */
     @Inject
     private ScriptedRepositories repositories;
 
     /**
      * Test it was injected.
-     * @throws Exception
+     * @throws Exception If something goes wrong.
      */
     @Test
     public final void testProvided() throws Exception {
@@ -68,7 +68,7 @@ public class RepositoriesProviderTest {
 
     /**
      * Test it was correctly parsed.
-     * @throws Exception
+     * @throws Exception If something goes wrong.
      */
     @Test
     public final void testCorrectParsing() throws Exception {
@@ -77,10 +77,10 @@ public class RepositoriesProviderTest {
         Assert.assertThat(
             repository.getId().getOwner(),
             CoreMatchers.equalTo("caarlos0")
-            );
+        );
         Assert.assertThat(
             repository.getId().getName(),
             CoreMatchers.equalTo("github-integrator")
-            );
+        );
     }
 }

@@ -27,6 +27,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
+import com.carlosbecker.integrator.model.ScriptedRepository;
 import org.junit.Test;
 
 public class ScriptedRepositoryTest {

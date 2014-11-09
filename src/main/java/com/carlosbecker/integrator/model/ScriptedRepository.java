@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.carlosbecker.model;
+package com.carlosbecker.integrator.model;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;

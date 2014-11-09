@@ -27,6 +27,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import com.carlosbecker.guice.GuiceModules;
 import com.carlosbecker.guice.GuiceTestRunner;
+import com.carlosbecker.integrator.github.GithubModule;
 import javax.inject.Inject;
 import org.eclipse.egit.github.core.service.IssueService;
 import org.junit.Test;

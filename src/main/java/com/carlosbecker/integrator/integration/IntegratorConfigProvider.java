@@ -21,31 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.carlosbecker.github;
+package com.carlosbecker.integrator.integration;
 
-import com.carlosbecker.integration.IntegratorConfig;
 import com.google.inject.Provider;
-import javax.inject.Inject;
-import lombok.AllArgsConstructor;
-import org.eclipse.egit.github.core.client.GitHubClient;
+import org.aeonbits.owner.ConfigFactory;
 
 /**
- * Provides the GithubClient instance.
- *
+ * Provides the integrator configuration.
  * @author Carlos Alexandro Becker (caarlos0@gmail.com)
  * @version $Id$
  */
-@AllArgsConstructor(onConstructor = @__(@Inject))
-public class GitHubClientProvider implements Provider<GitHubClient> {
-    /**
-     * Config.
-     */
-    private transient IntegratorConfig config;
-
+public class IntegratorConfigProvider implements Provider<IntegratorConfig> {
     @Override
-    public final GitHubClient get() {
-        final GitHubClient client = new GitHubClient();
-        client.setOAuth2Token(this.config.oauth());
-        return client;
+    public final IntegratorConfig get() {
+        return ConfigFactory.create(IntegratorConfig.class);
     }
 }

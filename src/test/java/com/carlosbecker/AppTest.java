@@ -24,6 +24,7 @@
 package com.carlosbecker;
 
 import com.carlosbecker.integration.TestPropertiesLoader;
+import com.carlosbecker.integrator.App;
 import org.junit.ClassRule;
 import org.junit.Test;
 

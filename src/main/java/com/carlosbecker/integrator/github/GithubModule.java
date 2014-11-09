@@ -21,28 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.carlosbecker.github;
+package com.carlosbecker.integrator.github;
 
-import com.google.inject.Provider;
-import javax.inject.Inject;
-import lombok.AllArgsConstructor;
+import com.carlosbecker.integrator.ConfigModule;
+import com.carlosbecker.integrator.model.ScriptedRepositories;
+import com.carlosbecker.integrator.model.ScriptedRepositoriesProvider;
+import com.google.inject.AbstractModule;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.IssueService;
+import org.eclipse.egit.github.core.service.PullRequestService;
 
 /**
- * Provides the IssueService instance.
+ * Github Guice Module.
+ *
  * @author Carlos Alexandro Becker (caarlos0@gmail.com)
  * @version $Id$
  */
-@AllArgsConstructor(onConstructor = @__(@Inject))
-public class IssueServiceProvider implements Provider<IssueService> {
-    /**
-     * Github client.
-     */
-    private transient GitHubClient client;
-
+public class GithubModule extends AbstractModule {
     @Override
-    public final IssueService get() {
-        return new IssueService(this.client);
+    protected final void configure() {
+        install(new ConfigModule());
+        bind(GitHubClient.class).toProvider(GitHubClientProvider.class);
+        bind(PullRequestService.class)
+            .toProvider(PullRequestServiceProvider.class);
+        bind(IssueService.class).toProvider(IssueServiceProvider.class);
+        bind(ScriptedRepositories.class)
+            .toProvider(ScriptedRepositoriesProvider.class);
     }
 }

@@ -21,10 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.carlosbecker;
+package com.carlosbecker.integrator;
 
-import com.carlosbecker.github.GithubModule;
-import com.carlosbecker.integration.AppRunner;
+import com.carlosbecker.integrator.github.GithubModule;
+import com.carlosbecker.integrator.integration.AppRunner;
 import com.google.inject.Guice;
 import lombok.extern.log4j.Log4j;
 

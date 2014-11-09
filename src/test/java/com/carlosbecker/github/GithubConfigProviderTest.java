@@ -25,11 +25,11 @@ package com.carlosbecker.github;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import com.carlosbecker.ConfigModule;
 import com.carlosbecker.guice.GuiceModules;
 import com.carlosbecker.guice.GuiceTestRunner;
-import com.carlosbecker.integration.IntegratorConfig;
 import com.carlosbecker.integration.TestPropertiesLoader;
+import com.carlosbecker.integrator.ConfigModule;
+import com.carlosbecker.integrator.integration.IntegratorConfig;
 import javax.inject.Inject;
 import org.junit.ClassRule;
 import org.junit.Test;

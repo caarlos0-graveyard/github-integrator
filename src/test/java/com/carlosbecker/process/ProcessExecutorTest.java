@@ -24,6 +24,7 @@
 package com.carlosbecker.process;
 
 import static java.util.Arrays.asList;
+import com.carlosbecker.integrator.process.ProcessExecutor;
 import org.junit.Before;
 import org.junit.Test;
 

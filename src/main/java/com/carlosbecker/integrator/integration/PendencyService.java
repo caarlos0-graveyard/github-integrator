@@ -21,9 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.carlosbecker.integration;
+package com.carlosbecker.integrator.integration;
 
-import com.carlosbecker.model.ScriptedRepository;
+import com.carlosbecker.integrator.model.ScriptedRepository;
 import com.google.common.collect.Maps;
 import java.util.List;
 import java.util.Map;

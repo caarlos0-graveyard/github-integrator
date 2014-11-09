@@ -21,29 +21,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.carlosbecker.github;
+package com.carlosbecker.integrator.integration;
 
-import com.google.inject.Provider;
-import javax.inject.Inject;
-import lombok.AllArgsConstructor;
-import org.eclipse.egit.github.core.client.GitHubClient;
-import org.eclipse.egit.github.core.service.PullRequestService;
+import org.aeonbits.owner.Config;
+import org.aeonbits.owner.Config.Sources;
 
 /**
- * PullRequest service provider.
+ * The integrator config.
  * @author Carlos Alexandro Becker (caarlos0@gmail.com)
  * @version $Id$
  */
-@AllArgsConstructor(onConstructor = @__(@Inject))
-public class PullRequestServiceProvider
-    implements Provider<PullRequestService> {
+@Sources("file:${INTEGRATOR_CONFIG}")
+public interface IntegratorConfig extends Config {
     /**
-     * Client.
+     * The oauth key.
+     * @return Github outh key.
      */
-    private transient GitHubClient client;
+    @Key("github.oauth")
+    String oauth();
 
-    @Override
-    public final PullRequestService get() {
-        return new PullRequestService(this.client);
-    }
+    /**
+     * The executions file path.
+     * @return The executions file path.
+     */
+    String executions();
+
+    /**
+     * The sleep time period. Defaults to 1min.
+     * @return The sleep period (in seconds).
+     */
+    @DefaultValue("60")
+    int period();
+
+    /**
+     * Wether it should keep running. Defaults to true.
+     * @return True if it should loop.
+     */
+    @DefaultValue("true")
+    boolean loop();
 }

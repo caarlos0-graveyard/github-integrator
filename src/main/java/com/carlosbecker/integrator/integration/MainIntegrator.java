@@ -21,11 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.carlosbecker.integration;
+package com.carlosbecker.integrator.integration;
 
-import com.carlosbecker.model.ScriptedRepositories;
-import com.carlosbecker.model.ScriptedRepository;
-import com.carlosbecker.process.ProcessExecutor;
+import com.carlosbecker.integrator.model.ScriptedRepositories;
+import com.carlosbecker.integrator.model.ScriptedRepository;
+import com.carlosbecker.integrator.process.ProcessExecutor;
 import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.util.Arrays;

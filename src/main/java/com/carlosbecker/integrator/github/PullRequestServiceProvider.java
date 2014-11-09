@@ -21,58 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.carlosbecker.integration;
+package com.carlosbecker.integrator.github;
 
+import com.google.inject.Provider;
 import javax.inject.Inject;
 import lombok.AllArgsConstructor;
-import lombok.extern.log4j.Log4j;
+import org.eclipse.egit.github.core.client.GitHubClient;
+import org.eclipse.egit.github.core.service.PullRequestService;
 
 /**
- * The App Runner.
- *
+ * PullRequest service provider.
  * @author Carlos Alexandro Becker (caarlos0@gmail.com)
  * @version $Id$
  */
-@Log4j
 @AllArgsConstructor(onConstructor = @__(@Inject))
-public class AppRunner {
-    private static final int SECOND = 1000;
+public class PullRequestServiceProvider
+    implements Provider<PullRequestService> {
     /**
-     * Config.
+     * Client.
      */
-    private final transient IntegratorConfig config;
-    /**
-     * Integrator.
-     */
-    private final transient MainIntegrator integrator;
+    private transient GitHubClient client;
 
-    /**
-     * Keeps running if config.loop() is true, otherwise runs once.
-     * @throws Exception
-     */
-    public void run() throws Exception {
-        do {
-            this.runOnce();
-            this.sleep();
-        } while (this.config.loop());
-    }
-
-    /**
-     * Sleep if config.loop() is true. Otherwise does nothing.
-     * @throws InterruptedException If fails at sleep.
-     */
-    private void sleep() throws InterruptedException {
-        if (this.config.loop()) {
-            log.info("Waiting...");
-            Thread.sleep(this.config.period() * SECOND);
-        }
-    }
-
-    /**
-     * Work on integrator one time.
-     */
-    private void runOnce() {
-        log.info("Running...");
-        this.integrator.work();
+    @Override
+    public final PullRequestService get() {
+        return new PullRequestService(this.client);
     }
 }

@@ -21,38 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.carlosbecker.model;
+package com.carlosbecker.integrator.github;
 
-import java.util.Iterator;
-import java.util.List;
-import lombok.RequiredArgsConstructor;
+import com.google.inject.Provider;
+import javax.inject.Inject;
+import lombok.AllArgsConstructor;
+import org.eclipse.egit.github.core.client.GitHubClient;
+import org.eclipse.egit.github.core.service.IssueService;
 
 /**
- * Represents a list of scripted repositories.
- *
+ * Provides the IssueService instance.
  * @author Carlos Alexandro Becker (caarlos0@gmail.com)
  * @version $Id$
  */
-@RequiredArgsConstructor
-public class ScriptedRepositories {
+@AllArgsConstructor(onConstructor = @__(@Inject))
+public class IssueServiceProvider implements Provider<IssueService> {
     /**
-     * List of scripted repositories.
+     * Github client.
      */
-    private final List<ScriptedRepository> repositories;
+    private transient GitHubClient client;
 
-    /**
-     * Iterates over scripted repositories.
-     * @return Scripted Repositories Iterator.
-     */
-    public Iterator<ScriptedRepository> iterator() {
-        return this.repositories.iterator();
-    }
-
-    /**
-     * Checks wether the repository list is empty.
-     * @return True if empty, false otherwise.
-     */
-    public final boolean isEmpty() {
-        return this.repositories.isEmpty();
+    @Override
+    public final IssueService get() {
+        return new IssueService(this.client);
     }
 }

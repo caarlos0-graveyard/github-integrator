@@ -21,9 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.carlosbecker.model;
+package com.carlosbecker.integrator.model;
 
-import com.carlosbecker.integration.IntegratorConfig;
+import com.carlosbecker.integrator.integration.IntegratorConfig;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

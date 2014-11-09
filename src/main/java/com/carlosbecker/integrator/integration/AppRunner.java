@@ -21,42 +21,58 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.carlosbecker.integration;
+package com.carlosbecker.integrator.integration;
 
-import org.aeonbits.owner.Config;
-import org.aeonbits.owner.Config.Sources;
+import javax.inject.Inject;
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j;
 
 /**
- * The integrator config.
+ * The App Runner.
+ *
  * @author Carlos Alexandro Becker (caarlos0@gmail.com)
  * @version $Id$
  */
-@Sources("file:${INTEGRATOR_CONFIG}")
-public interface IntegratorConfig extends Config {
+@Log4j
+@AllArgsConstructor(onConstructor = @__(@Inject))
+public class AppRunner {
+    private static final int SECOND = 1000;
     /**
-     * The oauth key.
-     * @return Github outh key.
+     * Config.
      */
-    @Key("github.oauth")
-    String oauth();
+    private final transient IntegratorConfig config;
+    /**
+     * Integrator.
+     */
+    private final transient MainIntegrator integrator;
 
     /**
-     * The executions file path.
-     * @return The executions file path.
+     * Keeps running if config.loop() is true, otherwise runs once.
+     * @throws Exception
      */
-    String executions();
+    public void run() throws Exception {
+        do {
+            this.runOnce();
+            this.sleep();
+        } while (this.config.loop());
+    }
 
     /**
-     * The sleep time period. Defaults to 1min.
-     * @return The sleep period (in seconds).
+     * Sleep if config.loop() is true. Otherwise does nothing.
+     * @throws InterruptedException If fails at sleep.
      */
-    @DefaultValue("60")
-    int period();
+    private void sleep() throws InterruptedException {
+        if (this.config.loop()) {
+            log.info("Waiting...");
+            Thread.sleep(this.config.period() * SECOND);
+        }
+    }
 
     /**
-     * Wether it should keep running. Defaults to true.
-     * @return True if it should loop.
+     * Work on integrator one time.
      */
-    @DefaultValue("true")
-    boolean loop();
+    private void runOnce() {
+        log.info("Running...");
+        this.integrator.work();
+    }
 }

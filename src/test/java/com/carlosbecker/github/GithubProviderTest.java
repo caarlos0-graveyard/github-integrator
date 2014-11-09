@@ -28,6 +28,7 @@ import static org.junit.Assert.assertThat;
 import com.carlosbecker.guice.GuiceModules;
 import com.carlosbecker.guice.GuiceTestRunner;
 import com.carlosbecker.integration.TestPropertiesLoader;
+import com.carlosbecker.integrator.github.GithubModule;
 import javax.inject.Inject;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.junit.ClassRule;

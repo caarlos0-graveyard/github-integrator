@@ -45,14 +45,14 @@ import lombok.AllArgsConstructor;
  */
 @AllArgsConstructor(onConstructor = @__(@Inject))
 public class ScriptedRepositoriesProvider implements
-Provider<ScriptedRepositories> {
+    Provider<ScriptedRepositories> {
     /**
-     * The Scripted Repository List type token
+     * The Scripted Repository List type token.
      */
     private static final Type TYPE = new TypeToken<List<ScriptedRepository>>() {
     }.getType();
     /**
-     * Config
+     * Config.
      */
     private final transient IntegratorConfig config;
 
@@ -68,11 +68,13 @@ Provider<ScriptedRepositories> {
      * Parse the executions file to a ScriptedRepositories instance.
      * @return ScriptedRepositories instance.
      */
-    private final ScriptedRepositories parse() {
+    private ScriptedRepositories parse() {
         try {
             final Gson gson = new Gson();
-            return new ScriptedRepositories(gson.fromJson(loadFile(), TYPE));
-        } catch (final FileNotFoundException e) {
+            return new ScriptedRepositories(
+                gson.fromJson(this.loadFile(), TYPE)
+            );
+        } catch (final FileNotFoundException exception) {
             return new ScriptedRepositories(Lists.newArrayList());
         }
     }
@@ -82,7 +84,7 @@ Provider<ScriptedRepositories> {
      * @return The BufferedReader of the file.
      * @throws FileNotFoundException If the file doesn't exists.
      */
-    private final BufferedReader loadFile() throws FileNotFoundException {
+    private BufferedReader loadFile() throws FileNotFoundException {
         final File file = new File(this.config.executions());
         final FileInputStream inputStream = new FileInputStream(file);
         return new BufferedReader(new InputStreamReader(inputStream));

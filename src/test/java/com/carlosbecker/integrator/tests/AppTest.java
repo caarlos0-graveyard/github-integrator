@@ -27,14 +27,27 @@ import com.carlosbecker.integrator.App;
 import org.junit.ClassRule;
 import org.junit.Test;
 
+/**
+ * Main app class tests.
+ * @author Carlos Alexandro Becker (caarlos0@gmail.com)
+ * @version $Id$
+ */
 public class AppTest {
-    private static final String CFG = "./src/test/resources/main.test.properties";
-
+    /**
+     * Config loader.
+     * @checkstyle VisibilityModifierCheck (5 lines)
+     */
     @ClassRule
-    public static ConfigLoader cfg = new ConfigLoader(CFG);
+    public static ConfigLoader cfg = new ConfigLoader(
+        "./src/test/resources/main.test.properties"
+        );
 
+    /**
+     * Tests the static call.
+     * @throws Exception If something goes wrong.
+     */
     @Test
-    public void testStaticCall() throws Exception {
+    public final void testStaticCall() throws Exception {
         App.main(null);
     }
 }

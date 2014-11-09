@@ -45,9 +45,10 @@ import org.junit.runner.RunWith;
 public class GithubConfigProviderTest {
     /**
      * Rule.
+     * @checkstyle VisibilityModifierCheck (5 lines)
      */
     @ClassRule
-    public static ConfigLoader cfgLoader = new ConfigLoader();
+    public static ConfigLoader configLoader = new ConfigLoader();
 
     /**
      * Config.
@@ -82,7 +83,7 @@ public class GithubConfigProviderTest {
         Assert.assertThat(
             this.config.executions(),
             CoreMatchers.notNullValue()
-            );
+        );
     }
 
     /**

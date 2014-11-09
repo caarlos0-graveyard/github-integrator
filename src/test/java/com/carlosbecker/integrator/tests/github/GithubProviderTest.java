@@ -45,9 +45,10 @@ import org.junit.runner.RunWith;
 public class GithubProviderTest {
     /**
      * Rule.
+     * @checkstyle VisibilityModifierCheck (5 lines)
      */
     @ClassRule
-    public static ConfigLoader cfgLoader = new ConfigLoader();
+    public static ConfigLoader configLoader = new ConfigLoader();
 
     /**
      * Client.

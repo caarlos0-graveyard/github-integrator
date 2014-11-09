@@ -34,6 +34,7 @@ import org.junit.Test;
  * Scripted Repository Test
  * @author Carlos Alexandro Becker (caarlos0@gmail.com)
  * @version $Id$
+ * @checkstyle MultipleStringLiteralsCheck (200 lines)
  */
 public class ScriptedRepositoryTest {
 
@@ -47,15 +48,16 @@ public class ScriptedRepositoryTest {
             "",
             "",
             "test this",
-            "");
+            ""
+        );
         Assert.assertThat(
             subject.isAsk("test this please"),
             CoreMatchers.equalTo(true)
-            );
+        );
         Assert.assertThat(
             subject.isAsk("test this please..."),
             CoreMatchers.equalTo(true)
-            );
+        );
         Assert.assertThat(
             subject.isAsk("test this please!"),
             CoreMatchers.equalTo(true)
@@ -63,15 +65,15 @@ public class ScriptedRepositoryTest {
         Assert.assertThat(
             subject.isAsk("test this please;"),
             CoreMatchers.equalTo(true)
-            );
+        );
         Assert.assertThat(
             subject.isAsk("test this pLEase"),
             CoreMatchers.equalTo(true)
-            );
+        );
         Assert.assertThat(
             subject.isAsk("dont test this please"),
             CoreMatchers.equalTo(false)
-            );
+        );
     }
 
     /**
@@ -85,35 +87,35 @@ public class ScriptedRepositoryTest {
             "",
             "test this( for me)?",
             ""
-            );
+        );
         Assert.assertThat(
             subject.isAsk("test this, please"),
             CoreMatchers.equalTo(true)
-            );
+        );
         Assert.assertThat(
             subject.isAsk("test this for me..."),
             CoreMatchers.equalTo(true)
-            );
+        );
         Assert.assertThat(
             subject.isAsk("test this, please!"),
             CoreMatchers.equalTo(true)
-            );
+        );
         Assert.assertThat(
             subject.isAsk("test this for me, please!"),
             CoreMatchers.equalTo(true)
-            );
+        );
         Assert.assertThat(
             subject.isAsk("test this!!"),
             CoreMatchers.equalTo(true)
-            );
+        );
         Assert.assertThat(
             subject.isAsk("test thIs"),
             CoreMatchers.equalTo(true)
-            );
+        );
         Assert.assertThat(
             subject.isAsk("dont test this, please"),
             CoreMatchers.equalTo(false)
-            );
+        );
     }
 
     /**
@@ -127,39 +129,39 @@ public class ScriptedRepositoryTest {
             "",
             "deploy this to (production|staging)",
             ""
-            );
+        );
         Assert.assertThat(
             subject.isAsk("deploy this, please"),
             CoreMatchers.equalTo(false)
-            );
+        );
         Assert.assertThat(
             subject.isAsk("deploy this..."),
             CoreMatchers.equalTo(false)
-            );
+        );
         Assert.assertThat(
             subject.isAsk("deploy this, please!"),
             CoreMatchers.equalTo(false)
-            );
+        );
         Assert.assertThat(
             subject.isAsk("deploy this!!"),
             CoreMatchers.equalTo(false)
-            );
+        );
         Assert.assertThat(
             subject.isAsk("deploy thIs"),
             CoreMatchers.equalTo(false)
-            );
+        );
         Assert.assertThat(
             subject.isAsk("deploy this to production please..."),
             CoreMatchers.equalTo(true)
-            );
+        );
         Assert.assertThat(
             subject.isAsk("deploy this to staging, please..."),
             CoreMatchers.equalTo(true)
-            );
+        );
         Assert.assertThat(
             subject.getParams("deploy this to production, please"),
             CoreMatchers.equalTo(Arrays.asList("production"))
-            );
+        );
     }
 
     /**
@@ -173,19 +175,19 @@ public class ScriptedRepositoryTest {
             "",
             "",
             ""
-            );
+        );
         Assert.assertThat(
             subject.getParams(null),
             CoreMatchers.equalTo(Lists.newArrayList())
-            );
+        );
         Assert.assertThat(
             subject.getParams(""),
             CoreMatchers.equalTo(Lists.newArrayList())
-            );
+        );
         Assert.assertThat(
             subject.getParams("  "),
             CoreMatchers.equalTo(Lists.newArrayList())
-            );
+        );
     }
 
     /**
@@ -199,18 +201,18 @@ public class ScriptedRepositoryTest {
             "",
             "deploy this to (production|staging)",
             ""
-            );
+        );
         Assert.assertThat(
             subject.isReply(
                 "Ok, working on 'deploy this to production, please'..."
-                ),
-                CoreMatchers.equalTo(true)
-            );
+            ),
+            CoreMatchers.equalTo(true)
+        );
         Assert.assertThat(
             subject.getReplyParams(
-                "Ok, working on 'deploy this to production, please'..."
-                ),
-                CoreMatchers.equalTo(Arrays.asList("production"))
-            );
+            "Ok, working on 'deploy this to production, please'..."
+            ),
+            CoreMatchers.equalTo(Arrays.asList("production"))
+        );
     }
 }

@@ -40,14 +40,6 @@ import org.eclipse.egit.github.core.RepositoryId;
 @RequiredArgsConstructor
 public class ScriptedRepository {
     /**
-     * Please optional suffix regex.
-     */
-    private static final String PLEASE = "(,? please)?";
-    /**
-     * Request regex
-     */
-    private static final String REQUEST_REGEX = "^%s%s([^a-zA-Z0-9\\s]*)?$";
-    /**
      * Default reply start.
      */
     public static final String REPLY_START = "Ok, working on '";
@@ -56,28 +48,37 @@ public class ScriptedRepository {
      */
     public static final String REPLY_END = "'...";
     /**
-     * The repository owner
+     * Please optional suffix regex.
+     */
+    private static final String PLEASE = "(,? please)?";
+    /**
+     * Request regex.
+     */
+    private static final String REQUEST_REGEX = "^%s%s([^a-zA-Z0-9\\s]*)?$";
+    /**
+     * The repository owner.
      */
     @Getter
     private final String owner;
     /**
-     * The repository name
+     * The repository name.
      */
     @Getter
     private final String name;
     /**
-     * The regex to process
+     * The regex to process.
      */
     private final String regex;
     /**
-     * The script to execute
+     * The script to execute.
+     * @checkstyle ConstantUsageCheck (5 lines)
      */
     @Getter
     private final String script;
 
     /**
-     * Builds an repository id for this scripted repository
-     * @return A RepositoryId representing this repository
+     * Builds an repository id for this scripted repository.
+     * @return A RepositoryId representing this repository.
      */
     public final RepositoryId getId() {
         return new RepositoryId(this.owner, this.name);
@@ -85,8 +86,8 @@ public class ScriptedRepository {
 
     /**
      * Checks wether the given comment is requesting something from this
-     * Scripted Repository
-     * @param body Comment body
+     * Scripted Repository.
+     * @param body Comment body.
      * @return True if this repository should process this comment, false
      *         otherwise
      */
@@ -98,12 +99,46 @@ public class ScriptedRepository {
 
     /**
      * Checks wether the given comment is replying something from this
-     * Scripted Repository
+     * Scripted Repository.
      * @param body Comment body
      * @return True if this repository processed this comment, false otherwise
      */
     public final boolean isReply(final String body) {
         return this.isAsk(this.extractOriginalAsk(body));
+    }
+
+    /**
+     * Builds a reply message for the given params.
+     * @param params A param list.
+     * @return A reply
+     */
+    public final String getReplyMessage(final List<String> params) {
+        String message = this.regex;
+        for (final String param : params) {
+            message = this.regex.replaceFirst("\\(.*\\)", param);
+        }
+        return String.format("%s%s%s", REPLY_START, message, REPLY_END);
+    }
+
+    /**
+     * Get the reply parameters.
+     * @param body Reply body
+     * @return List of parameters
+     */
+    public final List<String> getReplyParams(final String body) {
+        return this.getParams(this.extractOriginalAsk(body));
+    }
+
+    /**
+     * Extracts the parameters of a request body.
+     * @param body Request body
+     * @return List of parameters
+     */
+    public final List<String> getParams(final String body) {
+        if (Strings.isNullOrEmpty(body) || !this.isAsk(body)) {
+            return Lists.newArrayList();
+        }
+        return this.buildParamList(body);
     }
 
     /**
@@ -118,19 +153,6 @@ public class ScriptedRepository {
     }
 
     /**
-     * Builds a reply message for the given params
-     * @param params A param list
-     * @return A reply
-     */
-    public String getReplyMessage(final List<String> params) {
-        String message = regex;
-        for (final String param : params) {
-            message = regex.replaceFirst("\\(.*\\)", param);
-        }
-        return String.format("%s%s%s", REPLY_START, message, REPLY_END);
-    }
-
-    /**
      * Get the request message for the given reply.
      * @param body Reply body
      * @return The possible request body
@@ -142,33 +164,18 @@ public class ScriptedRepository {
     }
 
     /**
-     * Get the reply parameters
-     * @param body Reply body
-     * @return List of parameters
+     * Build the list of parameters of a message.
+     * @param body The request comment body.
+     * @return List of params.
+     * @checkstyle IllegalTokenCheck (10 lines)
      */
-    public List<String> getReplyParams(final String body) {
-        return this.getParams(this.extractOriginalAsk(body));
-    }
-
-    /**
-     * Extracts the parameters of a request body
-     * @param body Request body
-     * @return List of parameters
-     */
-    public List<String> getParams(final String body) {
-        if (Strings.isNullOrEmpty(body) || !this.isAsk(body)) {
-            return Lists.newArrayList();
-        }
-        return this.buildParamList(body);
-    }
-
     private List<String> buildParamList(final String body) {
         final List<String> params = Lists.newArrayList();
         final Matcher matcher = this.pattern().matcher(body);
         matcher.matches();
-        for (int groupIdx = 1; groupIdx <= matcher.groupCount(); groupIdx++) {
-            if (this.isValidParam(matcher.group(groupIdx))) {
-                params.add(matcher.group(groupIdx));
+        for (int idx = 1; idx <= matcher.groupCount(); idx++) {
+            if (this.isValidParam(matcher.group(idx))) {
+                params.add(matcher.group(idx));
             }
         }
         return params;

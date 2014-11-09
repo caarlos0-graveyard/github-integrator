@@ -57,6 +57,6 @@ public class PullRequestServiceProviderTest {
         Assert.assertThat(
             this.service.getClient(),
             CoreMatchers.notNullValue()
-            );
+        );
     }
 }

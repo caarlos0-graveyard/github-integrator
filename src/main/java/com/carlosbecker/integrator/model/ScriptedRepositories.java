@@ -43,6 +43,7 @@ public class ScriptedRepositories {
     /**
      * Iterates over scripted repositories.
      * @return Scripted Repositories Iterator.
+     * @checkstyle DesignForExtensionCheck (5 lines).
      */
     public Iterator<ScriptedRepository> iterator() {
         return this.repositories.iterator();

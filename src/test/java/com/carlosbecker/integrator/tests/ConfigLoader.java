@@ -35,24 +35,28 @@ import org.junit.rules.ExternalResource;
 @RequiredArgsConstructor
 public class ConfigLoader extends ExternalResource {
     /**
-     * Path to integrator config file
+     * Integrator config key.
+     */
+    private static final String KEY = "INTEGRATOR_CONFIG";
+    /**
+     * Path to integrator config file.
      */
     private final transient String config;
 
     /**
-     * Constructor with the default test.properties
+     * Constructor with the default test.properties.
      */
     public ConfigLoader() {
         this("./src/test/resources/test.properties");
     }
 
     @Override
-    protected final void before() throws Throwable {
-        System.setProperty("INTEGRATOR_CONFIG", config);
+    protected final void before() {
+        System.setProperty(KEY, this.config);
     }
 
     @Override
     protected final void after() {
-        System.clearProperty("INTEGRATOR_CONFIG");
+        System.clearProperty(KEY);
     }
 }

@@ -59,6 +59,10 @@ public class ScriptedRepositoriesProviderMapperTest {
         this.provider = new ScriptedRepositoriesProvider(this.config);
     }
 
+    /**
+     * Test with null input.
+     * @throws Exception If something goes wrong.
+     */
     @Test
     public final void nullInput() throws Exception {
         Mockito.when(this.config.executions()).thenReturn(null);
@@ -67,6 +71,10 @@ public class ScriptedRepositoriesProviderMapperTest {
         Assert.assertThat(repositories.isEmpty(), CoreMatchers.equalTo(true));
     }
 
+    /**
+     * Test with empty input.
+     * @throws Exception If something goes wrong.
+     */
     @Test
     public void testEmptyInput() throws Exception {
         Mockito.when(this.config.executions()).thenReturn(" ");
@@ -75,10 +83,14 @@ public class ScriptedRepositoriesProviderMapperTest {
         Assert.assertThat(repositories.isEmpty(), CoreMatchers.equalTo(true));
     }
 
+    /**
+     * Test with valid input.
+     * @throws Exception If something goes wrong.
+     */
     @Test
     public void testValidInput() throws Exception {
         Mockito.when(this.config.executions())
-        .thenReturn("./src/test/resources/test.executions.json");
+            .thenReturn("./src/test/resources/test.executions.json");
         final ScriptedRepositories repositories = this.provider.get();
         Assert.assertThat(repositories, CoreMatchers.notNullValue());
         Assert.assertThat(repositories.isEmpty(), CoreMatchers.equalTo(false));

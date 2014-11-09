@@ -57,6 +57,6 @@ public class IssuerServiceProviderTest {
         Assert.assertThat(
             this.service.getClient(),
             CoreMatchers.notNullValue()
-            );
+        );
     }
 }

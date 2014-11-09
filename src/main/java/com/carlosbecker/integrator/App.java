@@ -60,7 +60,7 @@ public final class App {
         Guice.createInjector(
             new ConfigModule(),
             new GithubModule()
-            ).getInstance(AppRunner.class).run();
+        ).getInstance(AppRunner.class).run();
     }
 
 }

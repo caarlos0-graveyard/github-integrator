@@ -117,6 +117,21 @@
 					<mutationThreshold>85</mutationThreshold>
 				</configuration>
 			</plugin>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.18</version>
+				<configuration>
+					<runOrder>random</runOrder>
+					<trimStackTrace>false</trimStackTrace>
+					<failIfNoTests>false</failIfNoTests>
+					<failIfNoSpecifiedTests>true</failIfNoSpecifiedTests>
+					<parallel>all</parallel>
+					<parallelTestsTimeoutInSeconds>0</parallelTestsTimeoutInSeconds>
+					<parallelTestsTimeoutForcedInSeconds>0</parallelTestsTimeoutForcedInSeconds>
+					<perCoreThreadCount>true</perCoreThreadCount>
+					<threadCount>4</threadCount>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 </project>

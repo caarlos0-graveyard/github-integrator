@@ -4,7 +4,4 @@ jdk:
 notifications:
   email: false
 script:
-  - mvn clean install -Pqulice
-  - mvn clean install -Pmutation
-  - mvn clean install -Pci
-
+  - mvn clean install -Pmutation,qulice,ci

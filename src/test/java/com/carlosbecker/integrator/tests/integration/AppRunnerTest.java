@@ -26,9 +26,10 @@ package com.carlosbecker.integrator.tests.integration;
 import com.carlosbecker.integrator.integration.AppRunner;
 import com.carlosbecker.integrator.integration.IntegratorConfig;
 import com.carlosbecker.integrator.integration.MainIntegrator;
-import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.Timeout;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -54,6 +55,11 @@ public class AppRunnerTest {
      * Runner.
      */
     private transient AppRunner app;
+    /**
+     * Timeout rule.
+     */
+    @Rule
+    public Timeout timeout = new Timeout(1000);
 
     /**
      * Tear up.
@@ -64,17 +70,18 @@ public class AppRunnerTest {
         this.app = new AppRunner(this.config, this.integrator);
     }
 
-    @Test(timeout = 500)
+    @Test
     public final void testRunOnce() throws Exception {
         this.app.run();
         Mockito.verify(this.integrator).work();
     }
 
-    @Test(timeout = 500)
+    @Test
     public final void testRunTwice() throws Exception {
-        final AtomicInteger loop = new AtomicInteger(0);
         Mockito.when(this.config.loop())
-        .then(invocation -> loop.incrementAndGet() < 3);
+        .thenReturn(true)
+        .thenReturn(true)
+        .thenReturn(false);
         this.app.run();
         Mockito.verify(this.integrator, VerificationModeFactory.times(2))
         .work();

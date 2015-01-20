@@ -81,3 +81,5 @@ Temporary Items
 .project
 .classpath
 app.log
+.idea
+*.iml

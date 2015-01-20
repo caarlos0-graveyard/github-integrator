@@ -3,5 +3,5 @@ jdk:
   - oraclejdk8
 notifications:
   email: false
-script: mvn clean install -Pci
-
+script:
+  - mvn clean install -Pmutation,qulice,ci
